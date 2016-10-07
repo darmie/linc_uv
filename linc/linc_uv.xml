@@ -1,0 +1,134 @@
+<xml>
+
+    <!-- For a more in depth guide: https://github.com/snowkit/hxcpp-guide -->
+	
+	<set name="UV" value="${LINC_UV_PATH}lib/libuv" />
+	
+	<files id="haxe">
+		<compilerflag value='-I${UV}'/>
+		<compilerflag value="-I${UV}/src/"/>
+		<compilerflag value="-I${UV}/include/"/>
+		<compilerflag value='-DWIN32_LEAN_AND_MEAN' if="windows" />
+        <compilerflag value='-D_WIN32_WINNT=0x0600' if="windows" />
+        <compilerflag value='-D_DARWIN_USE_64_BIT_INODE=1' if="mac" />
+        <compilerflag value='-D_DARWIN_UNLIMITED_SELECT=1' if="mac" />
+        <compilerflag value='-D_DARWIN_USE_64_BIT_INODE=1' if="macos" />
+        <compilerflag value='-D_DARWIN_UNLIMITED_SELECT=1' if="macos" />
+        <compilerflag value='-D_GNU_SOURCE' if="linux" />
+
+		<compilerflag value='-I${LINC_UV_PATH}linc/'/>	
+		<file name='${LINC_UV_PATH}linc/linc_uv.cpp' />
+	</files>
+
+	<files id="haxe">
+		<file name="${UV}/src/fs-poll.c" />
+		<file name="${UV}/src/inet.c" />
+		<file name="${UV}/src/threadpool.c" />
+		<file name="${UV}/src/uv-common.c" />
+		<file name="${UV}/src/version.c" />
+
+		<section if="windows">
+			<compilerflag value="-I${UV}/src/win/"/>
+			<file name="${UV}/src/win/async.c" />
+			<file name="${UV}/src/win/core.c" />
+			<file name="${UV}/src/win/detect-wakeup.c" />
+			<file name="${UV}/src/win/dl.c" />
+			<file name="${UV}/src/win/error.c" />
+			<file name="${UV}/src/win/fs.c" />
+			<file name="${UV}/src/win/fs-event.c" />
+			<file name="${UV}/src/win/getaddrinfo.c" />
+			<file name="${UV}/src/win/getnameinfo.c" />
+			<file name="${UV}/src/win/handle.c" />
+			
+			<file name="${UV}/src/win/loop-watcher.c" />
+			<file name="${UV}/src/win/pipe.c" />
+			<file name="${UV}/src/win/poll.c" />
+			<file name="${UV}/src/win/process.c" />
+			<file name="${UV}/src/win/process-stdio.c" />
+			<file name="${UV}/src/win/req.c" />
+			
+			<file name="${UV}/src/win/signal.c" />
+			<file name="${UV}/src/win/snprintf.c" />
+			<file name="${UV}/src/win/stream.c" />
+			
+			<file name="${UV}/src/win/tcp.c" />
+			<file name="${UV}/src/win/thread.c" />
+			<file name="${UV}/src/win/timer.c" />
+			<file name="${UV}/src/win/tty.c" />
+			<file name="${UV}/src/win/udp.c" />
+			<file name="${UV}/src/win/util.c" />
+			<file name="${UV}/src/win/winapi.c" />
+			<file name="${UV}/src/win/winapi.c" />
+			<file name="${UV}/src/win/winsock.c" />
+		</section>	
+		<section if="linux">
+			<compilerflag value="-I${UV}/src/unix/"/>
+			<file name="${UV}/src/unix/async.c" />
+			<file name="${UV}/src/unix/core.c" />
+			<file name="${UV}/src/unix/dl.c" />
+			<file name="${UV}/src/unix/fs.c" />
+			<file name="${UV}/src/unix/getaddrinfo.c" />
+			<file name="${UV}/src/unix/getnameinfo.c" />
+			<file name="${UV}/src/unix/loop.c" />
+			<file name="${UV}/src/unix/loop-watcher.c" />
+			<file name="${UV}/src/unix/pipe.c" />
+			<file name="${UV}/src/unix/poll.c" />
+			<file name="${UV}/src/unix/process.c" />
+			<file name="${UV}/src/unix/proctitle.c" />
+			<file name="${UV}/src/unix/linux-core.c" />
+			<file name="${UV}/src/unix/linux-notify.c" />
+			<file name="${UV}/src/unix/linux-syscalls.c" />
+			<file name="${UV}/src/unix/signal.c" />
+			<file name="${UV}/src/unix/stream.c" />
+			<file name="${UV}/src/unix/tcp.c" />
+			<file name="${UV}/src/unix/thread.c" />
+			<file name="${UV}/src/unix/timer.c" />
+			<file name="${UV}/src/unix/tty.c" />
+			<file name="${UV}/src/unix/udp.c" />
+		</section>
+
+		<section if="macos">
+			<compilerflag value="-I${UV}/src/unix/"/>
+			<file name="${UV}/src/unix/async.c" />
+			<file name="${UV}/src/unix/core.c" />
+			<file name="${UV}/src/unix/darwin.c" />
+			<file name="${UV}/src/unix/darwin-proctitle.c" />
+			<file name="${UV}/src/unix/dl.c" />
+			<file name="${UV}/src/unix/kqueue.c" />
+			<file name="${UV}/src/unix/pthread-barrier.c" />
+			<file name="${UV}/src/unix/fs.c" />
+			<file name="${UV}/src/unix/fsevents.c" />
+			<file name="${UV}/src/unix/getaddrinfo.c" />
+			<file name="${UV}/src/unix/getnameinfo.c" />
+			<file name="${UV}/src/unix/loop.c" />
+			<file name="${UV}/src/unix/loop-watcher.c" />
+			<file name="${UV}/src/unix/pipe.c" />
+			<file name="${UV}/src/unix/poll.c" />
+			<file name="${UV}/src/unix/process.c" />
+			<file name="${UV}/src/unix/proctitle.c" />
+			<file name="${UV}/src/unix/signal.c" />
+			<file name="${UV}/src/unix/stream.c" />
+			<file name="${UV}/src/unix/tcp.c" />
+			<file name="${UV}/src/unix/thread.c" />
+			<file name="${UV}/src/unix/timer.c" />
+			<file name="${UV}/src/unix/tty.c" />
+			<file name="${UV}/src/unix/udp.c" />
+		</section>	
+		
+
+    </files>
+
+    <target id="haxe">
+
+        <!-- add linker flags to the haxe build output -->
+        <section if="windows">
+			<lib name='ws2_32.lib' />   
+            <lib name='advapi32.lib'  />
+            <lib name='iphlpapi.lib' />
+            <lib name='psapi.lib' />
+            <lib name='shell32.lib' />
+			<lib name='userenv.lib' />
+        </section>
+    </target>
+
+</xml>
