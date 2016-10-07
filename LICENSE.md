@@ -1,7 +1,7 @@
 The MIT License (MIT)
 
-Copyright (c) 2015 Darmie Akinlaja   
-Copyright (c) 2015 snõwkit contributors
+Copyright (c) 2016 Darmie Akinlaja   
+Copyright (c) 2016 snõwkit contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
