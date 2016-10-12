@@ -148,7 +148,7 @@ extern class Req_t{}
 @:enum 
 abstract Uv_poll_event(Int)
 from Int to Int{
-	var UV_READABLE = 1,
-	var UV_WRITABLE = 2,
-	var UV_DISCONNECT = 4
-};
+	var UV_READABLE = 1;
+	var UV_WRITABLE = 2;
+	var UV_DISCONNECT = 4;
+}
