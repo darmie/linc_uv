@@ -8,6 +8,13 @@ import uv.Loop.Loop_t;
  * @author Darmie Akinlaja
  */
 
+@:keep
+@:include('linc_uv.h')
+#if !display
+@:build(linc.Linc.touch())
+@:build(linc.Linc.xml('uv'))
+#end
+
  
 extern class Poll extends Handle_t
 {

@@ -1,6 +1,8 @@
 package uv;
 
 import cpp.Callable;
+import cpp.Char;
+import cpp.UInt16;
 import cpp.Void;
 import uv.Loop.Loop_t;
 import uv.Uv;
@@ -28,7 +30,21 @@ extern class Handle
 	public static function close(handle:Handle_t, close_cb:Callable < Handle_t->Void > ):Void;
 	
 	@:native('uv_walk')
-	public static function walk(loop:Loop_t, walk_cb:Callable<Handle_t->Dynamic>):Int;
+	public static function walk(loop:Loop_t, walk_cb:Callable < Handle_t->Dynamic > , args:Void):Int;
+	
+	@:native('uv_send_buffer_size')
+	public static function send_buffer_size(handle:Handle_t, value:Int):Int;
+	
+	@:native('uv_recv_buffer_size')
+	public static function recv_buffer_size(handle:Handle_t, value:Int):Int;
+	
+	//@:native('uv_fileno')
+	//public static function recv_buffer_size(handle:Handle_t, fd:Dynamic):Int;	 TODO::
+	
+	@:native('uv_buf_init')
+	public static function buf_init(base:Char, len:UInt16):Buffer;
+	
+	
 	
 }
 
