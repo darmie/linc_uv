@@ -33,10 +33,7 @@ typedef Uv_file = Int;
 
 
 extern class Fs extends Req_t
-{
-	public static inline var UV_FS_SYMLINK_DIR    	= 0x0001;
-	public static inline var UV_FS_SYMLINK_JUNCTION = 0x0002;
-	
+{	
 	@:native('uv_fs_req_cleanup')
 	public static function req_cleanup(req:Fs_t):Void;
 	

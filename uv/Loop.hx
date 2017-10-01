@@ -4,6 +4,7 @@ import cpp.UInt16;
 import cpp.UInt64;
 import cpp.Void;
 import uv.Handle.Handle_t;
+import uv.Uv.Int64_t;
 import uv.Uv.UVRunMode;
 
 
@@ -51,13 +52,14 @@ extern class Loop extends Handle_t
 	public static function update_time(loop:Loop_t):Void;
 	
 	@:native('uv_now')
-	public static function now(loop:Loop_t):UInt64;
+	public static function now(loop:Loop_t):Int64_t;
 	
 	@:native('uv_backend_fd')
 	public static function backend_fd(loop:Loop_t):Int;
 	
 	@:native('uv_backend_timeout')
 	public static function backend_timeout(loop:Loop_t):Int;
+	
 		
 }
 
@@ -65,6 +67,8 @@ extern class Loop extends Handle_t
 @:native('::cpp::Reference<uv_loop_t>')
 @:include('linc_uv.h')
 extern class Loop_t extends Loop {}
+
+
 
 /*@:native('::cpp::Reference<uv_handle_t>')
 @:include('linc_uv.h')
