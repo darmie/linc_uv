@@ -142,9 +142,9 @@ from ReqType to ReqType {
 	@:from(ReqType)
 	@:unreflective
 	inline static public function fromNative(value:ReqType) return new UVReqType(untyped value);	
-	public static var UV_UNKNOWN_REQ = new UVHandleType(untyped __cpp__("UV_UNKNOWN_REQ"));
-	public static var UV_REQ_TYPE_PRIVATE = new UVHandleType(untyped __cpp__("UV_REQ_TYPE_PRIVATE"));
-	public static var UV_REQ_TYPE_MAX = new UVHandleType(untyped __cpp__("UV_REQ_TYPE_MAX"));
+	public static var UV_UNKNOWN_REQ = new UVReqType(untyped __cpp__("UV_UNKNOWN_REQ"));
+	public static var UV_REQ_TYPE_PRIVATE = new UVReqType(untyped __cpp__("UV_REQ_TYPE_PRIVATE"));
+	public static var UV_REQ_TYPE_MAX = new UVReqType(untyped __cpp__("UV_REQ_TYPE_MAX"));
 }
 
 
