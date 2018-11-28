@@ -89,13 +89,48 @@
 
 		<section if="macos">
 			<compilerflag value="-I${UV}/src/unix/"/>
-			<file name="${UV}/src/unix/async.c" />
+			
+			
+    		<file name="${UV}/src/fs-poll.c"/>
+    		<file name="${UV}/src/idna.c"/>
+    		<file name="${UV}/src/inet.c"/>
+    		<file name="${UV}/src/threadpool.c"/>
+    		<file name="${UV}/src/timer.c"/>
+    		<file name="${UV}/src/uv-common.c"/>
+    		<file name="${UV}/src/uv-data-getter-setters.c"/>
+    		<file name="${UV}/src/version.c"/>>
+			<file name="${UV}/src/unix/async.c"/>
+			<file name="${UV}/src/unix/core.c"/>
+			<file name="${UV}/src/unix/dl.c"/>
+			<file name="${UV}/src/unix/fs.c"/>
+			<file name="${UV}/src/unix/getaddrinfo.c"/>
+			<file name="${UV}/src/unix/getnameinfo.c"/>
+			<file name="${UV}/src/unix/loop-watcher.c"/>
+			<file name="${UV}/src/unix/loop.c"/>
+			<file name="${UV}/src/unix/pipe.c"/>
+			<file name="${UV}/src/unix/poll.c"/>
+			<file name="${UV}/src/unix/process.c"/>
+			<file name="${UV}/src/unix/signal.c"/>
+			<file name="${UV}/src/unix/stream.c"/>
+			<file name="${UV}/src/unix/tcp.c"/>
+			<file name="${UV}/src/unix/thread.c"/>
+			<file name="${UV}/src/unix/tty.c"/>
+			<file name="${UV}/src/unix/udp.c"/>
+			<file name="${UV}/src/unix/proctitle.c"/>
+			<file name="${UV}/src/unix/bsd-ifaddrs.c"/>
+			<file name="${UV}/src/unix/kqueue.c"/>
+			<file name="${UV}/src/unix/darwin-proctitle.c"/>
+			<file name="${UV}/src/unix/darwin.c"/>
+			<file name="${UV}/src/unix/fsevents.c"/>>
+			
+			
+			<!-- <file name="${UV}/src/unix/async.c" />
 			<file name="${UV}/src/unix/core.c" />
 			<file name="${UV}/src/unix/darwin.c" />
 			<file name="${UV}/src/unix/darwin-proctitle.c" />
 			<file name="${UV}/src/unix/dl.c" />
 			<file name="${UV}/src/unix/kqueue.c" />
-			<file name="${UV}/src/unix/pthread-barrier.c" />
+			<file name="${UV}/src/unix/pthread-fixes.c" />
 			<file name="${UV}/src/unix/fs.c" />
 			<file name="${UV}/src/unix/fsevents.c" />
 			<file name="${UV}/src/unix/getaddrinfo.c" />
@@ -112,7 +147,7 @@
 			<file name="${UV}/src/unix/thread.c" />
 			<file name="${UV}/src/unix/timer.c" />
 			<file name="${UV}/src/unix/tty.c" />
-			<file name="${UV}/src/unix/udp.c" />
+			<file name="${UV}/src/unix/udp.c" /> -->
 		</section>	
 		
 
