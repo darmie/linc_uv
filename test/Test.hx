@@ -54,7 +54,7 @@ class Foo {
 		if(nread > 0) {
 			var req = new Write();
 			var writeBuf = new Buf(nread);
-			req.setDataPointer(writeBuf);
+			req.setData(writeBuf);
 			writeBuf.copyFrom(buf);
 			client.asStream().write(req, writeBuf, 1, Callable.fromStaticFunction(onWrite));
 		}
@@ -67,7 +67,7 @@ class Foo {
 	
 	static function onWrite(handle:RawPointer<Write_t>, status:Int) {
 		var write:Write = handle;
-		var buf:Buf = write.getDataPointer();
+		var buf:Buf = write.getData();
 		buf.destroy();
 		write.destroy();
 	}
