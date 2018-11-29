@@ -3,24 +3,13 @@ package uv;
 import uv.Uv;
 import cpp.*;
 
-@:unreflective
-class SockAddrIn extends Finalizable {
-	var handle:Pointer<SockAddrInHandle>;
+abstract SockAddrIn(Pointer<SockAddrIn_s>) from Pointer<SockAddrIn_s> to Pointer<SockAddrIn_s> {
+	public inline function new() this = Stdlib.malloc(Stdlib.sizeof(SockAddrIn_s));
+	public inline function destroy() return Stdlib.free(this);
+	@:to public inline function asRawPointer():RawPointer<SockAddrIn_s> return this.raw;
+	@:to public inline function asRawConstPointer():RawConstPointer<SockAddrIn_s> return this.constRaw;
+	@:to public inline function asRawConstPointerSockAddr():RawConstPointer<SockAddr_s> return (this.reinterpret():Pointer<SockAddr_s>).constRaw;
 	
-	public static function ip4Addr(ip:String, port:Int):SockAddrIn {
-		var handle:Pointer<SockAddrInHandle> = Stdlib.malloc(Stdlib.sizeof(SockAddrInHandle));
-		Uv.ip4_addr(ip, port, cast handle);
-		return new SockAddrIn(handle);
-	}
-	
-	inline function new(handle) {
-		super();
-		this.handle = handle;
-	}
-	
-	override function finalize() {
-		Stdlib.free(handle);
-		handle = null;
-	}
+	public function ip4Addr(host:String, port:Int) return Uv.ip4_addr(host, port, asRawPointer());
+	// public function ip4Name(host:String, port:Int) return Uv.ip4_addr(host, port, toRaw());
 }
-

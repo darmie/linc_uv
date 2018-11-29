@@ -24,41 +24,41 @@ extern class Uv {
 	
 	// loop
 	@:native("uv_default_loop")
-	public static function default_loop():LoopHandle;
+	public static function default_loop():RawPointer<Loop_t>;
 	@:native("uv_loop_init")
-	public static function loop_init(loop:LoopHandle):Int;
+	public static function loop_init(loop:RawPointer<Loop_t>):Int;
 	@:native("uv_run")
-	public static function run(loop:LoopHandle, mode:RunMode):Int;
+	public static function run(loop:RawPointer<Loop_t>, mode:RunMode):Int;
 	
 	// timer
 	@:native("uv_timer_init")
-	public static function timer_init(loop:LoopHandle, timer:TimerHandle):Int;
+	public static function timer_init(loop:RawPointer<Loop_t>, timer:RawPointer<Timer_t>):Int;
 	@:native("uv_timer_start")
-	public static function timer_start(timer:TimerHandle, cb:TimerCallback, timeout:UInt64_t, repeat:UInt64_t):Int;
+	public static function timer_start(timer:RawPointer<Timer_t>, cb:TimerCallback, timeout:UInt64_t, repeat:UInt64_t):Int;
 	@:native("uv_timer_stop")
-	public static function timer_stop(timer:TimerHandle):Int;
+	public static function timer_stop(timer:RawPointer<Timer_t>):Int;
 	
 	// tcp
 	@:native("uv_tcp_init")
-	public static function tcp_init(loop:LoopHandle, tcp:TcpHandle):Int;
+	public static function tcp_init(loop:RawPointer<Loop_t>, tcp:RawPointer<Tcp_t>):Int;
 	@:native("uv_tcp_bind")
-	public static function tcp_bind(tcp:TcpHandle, addr:SockAddrHandle, flags:Int):Int;
+	public static function tcp_bind(tcp:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
 	
 	// stream
 	@:native("uv_listen")
-	public static function listen(stream:StreamHandle, backlog:Int, cb:ConnectionCallback):Int;
+	public static function listen(stream:RawPointer<Stream_t>, backlog:Int, cb:ConnectionCallback):Int;
 	@:native("uv_accept")
-	public static function accept(stream:StreamHandle, client:StreamHandle):Int;
+	public static function accept(stream:RawPointer<Stream_t>, client:RawPointer<Stream_t>):Int;
 	@:native("uv_read_start")
-	public static function read_start(stream:StreamHandle, alloc_cb:AllocCallback, read_cb:ReadCallback):Int;
+	public static function read_start(stream:RawPointer<Stream_t>, alloc_cb:AllocCallback, read_cb:ReadCallback):Int;
 	@:native("uv_read_stop")
-	public static function read_stop(stream:StreamHandle):Int;
+	public static function read_stop(stream:RawPointer<Stream_t>):Int;
 	@:native("uv_close")
-	public static function close(stream:Handle, cb:CloseCallback):Int;
+	public static function close(stream:RawPointer<Handle_t>, cb:CloseCallback):Int;
 	
 	// misc
 	@:native("uv_ip4_addr")
-	public static function ip4_addr(ip:String, port:Int, addr:SockAddrInHandle):Int;
+	public static function ip4_addr(ip:String, port:Int, addr:RawPointer<SockAddrIn_s>):Int;
 	@:native("uv_hrtime")
 	public static function hrtime():UInt64_t;
 }
@@ -67,92 +67,84 @@ extern class Uv {
 
 @:include('linc_uv.h')
 @:native('uv_run_mode')
+@:unreflective
 extern class RunMode {}
-
-
-@:include('linc_uv.h')
-@:native('cpp::Reference<uv_handle_t>')
-extern class Handle {
-	var data:Star<cpp.Void>;
-}
 
 @:include('linc_uv.h')
 @:native('uv_handle_t')
-extern class Handle_t {}
-
-@:include('linc_uv.h')
-@:native('cpp::Reference<uv_loop_t>')
-extern class LoopHandle extends Handle {}
+@:unreflective
+@:structAccess
+extern class Handle_t {
+	var data:RawPointer<cpp.Void>;
+}
 
 @:include('linc_uv.h')
 @:native('uv_loop_t')
-extern class Loop_t {}
-
-@:include('linc_uv.h')
-@:native('cpp::Reference<uv_tcp_t>')
-extern class TcpHandle extends StreamHandle {}
+@:unreflective
+@:structAccess
+extern class Loop_t extends Handle_t {}
 
 @:include('linc_uv.h')
 @:native('uv_tcp_t')
-extern class Tcp_t {}
-
-@:include('linc_uv.h')
-@:native('cpp::Reference<uv_timer_t>')
-extern class TimerHandle extends Handle {}
+@:unreflective
+@:structAccess
+extern class Tcp_t extends Stream_t {}
 
 @:include('linc_uv.h')
 @:native('uv_timer_t')
-extern class Timer_t {}
-
-@:include('linc_uv.h')
-@:native('cpp::Reference<uv_stream_t>')
-extern class StreamHandle extends Handle {}
+@:unreflective
+@:structAccess
+extern class Timer_t extends Handle_t {}
 
 @:include('linc_uv.h')
 @:native('uv_stream_t')
-extern class Stream_t {}
+@:unreflective
+@:structAccess
+extern class Stream_t extends Handle_t {}
 
 @:include('linc_uv.h')
-@:native('cpp::Reference<uv_buf_t>')
-extern class BufHandle extends Handle {
-	var base:Star<Char>;
+@:native('uv_buf_t')
+@:unreflective
+@:structAccess
+extern class Buf_t {
+	var base:RawPointer<Char>;
 	var len:Int;
 }
 
 @:include('linc_uv.h')
-@:native('uv_buf_t')
-extern class Buf_t {}
-
-@:include('linc_uv.h')
-@:native('cpp::Reference<sockaddr>')
-extern class SockAddrHandle {}
-
-@:include('linc_uv.h')
-@:native('cpp::Reference<sockaddr_in>')
-extern class SockAddrInHandle {}
+@:native('sockaddr')
+@:unreflective
+@:structAccess
+extern class SockAddr_s {}
 
 @:include('linc_uv.h')
 @:native('sockaddr_in')
-extern class SockAddrIn {}
+@:unreflective
+@:structAccess
+extern class SockAddrIn_s {}
 
 @:include('linc_uv.h')
 @:native('size_t')
+@:unreflective
 extern class Size_t {}
 
 @:include('linc_uv.h')
 @:native('ssize_t')
+@:unreflective
 extern class SSize_t {}
 
 @:include('linc_uv.h')
 @:native('uint64_t')
+@:unreflective
 extern class UInt64_t {}
 
 @:include('linc_uv.h')
 @:native('long')
+@:unreflective
 extern class Long {}
 
-typedef ConnectionCallback = Callable<Star<Stream_t>->Int->Void>;
-typedef AllocCallback = Callable<Star<Handle_t>->Size_t->Star<Buf_t>->Void>;
-typedef ReadCallback = Callable<Star<Stream_t>->Long->ConstStar<Buf_t>->Void>;
-typedef CloseCallback = Callable<Star<Handle_t>->Void>;
-typedef TimerCallback = Callable<Star<Timer_t>->Void>;
+typedef ConnectionCallback = Callable<RawPointer<Stream_t>->Int->Void>;
+typedef AllocCallback = Callable<RawPointer<Handle_t>->Size_t->RawPointer<Buf_t>->Void>;
+typedef ReadCallback = Callable<RawPointer<Stream_t>->Long->RawConstPointer<Buf_t>->Void>;
+typedef CloseCallback = Callable<RawPointer<Handle_t>->Void>;
+typedef TimerCallback = Callable<RawPointer<Timer_t>->Void>;

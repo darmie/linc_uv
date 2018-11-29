@@ -98,7 +98,8 @@
     		<file name="${UV}/src/timer.c"/>
     		<file name="${UV}/src/uv-common.c"/>
     		<file name="${UV}/src/uv-data-getter-setters.c"/>
-    		<file name="${UV}/src/version.c"/>>
+    		<file name="${UV}/src/version.c"/>
+			
 			<file name="${UV}/src/unix/async.c"/>
 			<file name="${UV}/src/unix/core.c"/>
 			<file name="${UV}/src/unix/dl.c"/>
