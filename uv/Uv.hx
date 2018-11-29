@@ -52,6 +52,10 @@ extern class Uv {
 	public static function tcp_bind(handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
 	@:native("uv_tcp_connect")
 	public static function tcp_connect(req:RawPointer<Connect_t>, handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>, cb:ConnectCallback):Int;
+	@:native("uv_tcp_getsockname")
+	public static function tcp_getsockname(handle:RawConstPointer<Tcp_t>, name:RawPointer<SockAddr_s>, namelen:RawPointer<Int>):Int;
+	@:native("uv_tcp_getpeername")
+	public static function tcp_getpeername(handle:RawConstPointer<Tcp_t>, name:RawPointer<SockAddr_s>, namelen:RawPointer<Int>):Int;
 	
 	// stream
 	@:native("uv_listen")
@@ -66,8 +70,27 @@ extern class Uv {
 	public static function write(req:RawPointer<Write_t>, handle:RawPointer<Stream_t>, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, cb:WriteCallback):Int;
 	
 	// handle
+	@:native("uv_is_active")
+	public static function is_active(handle:RawConstPointer<Handle_t>):Int;
+	@:native("uv_is_closing")
+	public static function is_closing(handle:RawConstPointer<Handle_t>):Int;
 	@:native("uv_close")
-	public static function close(stream:RawPointer<Handle_t>, cb:CloseCallback):Void;
+	public static function close(handle:RawPointer<Handle_t>, close_cb:CloseCallback):Void;
+	@:native("uv_ref")
+	public static function ref(handle:RawPointer<Handle_t>):Void;
+	@:native("uv_unref")
+	public static function unref(handle:RawPointer<Handle_t>):Void;
+	@:native("uv_has_ref")
+	public static function has_ref(handle:RawConstPointer<Handle_t>):Int;
+	@:native("uv_handle_size")
+	public static function handle_size(type:HandleType):Size_t;
+	
+	// fs
+	// @:native("uv_fs_close")
+	// public static function fs_close(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File_s, cb:FsCallback):Void;
+	// @:native("uv_fs_open")
+	// public static function fs_open(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, path:ConstCharStar, flags:Int, cb:FsCallback):Void;
+	
 	
 	// misc
 	@:native("uv_buf_init")
@@ -84,6 +107,11 @@ extern class Uv {
 @:native('uv_run_mode')
 @:unreflective
 extern class RunMode {}
+
+@:include('linc_uv.h')
+@:native('uv_handle_type')
+@:unreflective
+extern class HandleType {}
 
 @:include('linc_uv.h')
 @:native('uv_handle_t')
@@ -110,6 +138,12 @@ extern class Tcp_t extends Stream_t {}
 @:unreflective
 @:structAccess
 extern class Timer_t extends Handle_t {}
+
+@:include('linc_uv.h')
+@:native('uv_fs_t')
+@:unreflective
+@:structAccess
+extern class Fs_t extends Handle_t {}
 
 @:include('linc_uv.h')
 @:native('uv_stream_t')
@@ -139,6 +173,12 @@ extern class Buf_t {
 }
 
 @:include('linc_uv.h')
+@:native('file')
+@:unreflective
+@:structAccess
+extern class File_s {}
+
+@:include('linc_uv.h')
 @:native('sockaddr')
 @:unreflective
 @:structAccess
@@ -149,6 +189,12 @@ extern class SockAddr_s {}
 @:unreflective
 @:structAccess
 extern class SockAddrIn_s {}
+
+@:include('linc_uv.h')
+@:native('sockaddr_storage')
+@:unreflective
+@:structAccess
+extern class SockAddrStorage_s {}
 
 @:include('linc_uv.h')
 @:native('size_t')
