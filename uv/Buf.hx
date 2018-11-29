@@ -8,6 +8,9 @@ using cpp.NativeArray;
 abstract Buf(Pointer<Buf_t>) from Pointer<Buf_t> to Pointer<Buf_t> {
 	public inline function new(size:Int) {
 		this = Stdlib.malloc(Stdlib.sizeof(Buf_t));
+		alloc(size);
+	}
+	public inline function alloc(size:Int) {
 		this.value.base = untyped __cpp__('(char*){0}', Stdlib.nativeMalloc(size));
 		this.value.len = size;
 	}
