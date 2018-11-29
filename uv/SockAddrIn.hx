@@ -13,8 +13,9 @@ abstract SockAddrIn(Pointer<SockAddrIn_s>) from Pointer<SockAddrIn_s> to Pointer
 	
 	public function ip4Addr(host:String, port:Int) return Uv.ip4_addr(host, port, asRaw());
 	
-	
-	public inline function getHost():{host:sys.net.Host, port:Int} {
+	public inline function getAddress():{host:sys.net.Host, port:Int} {
+		// ref: std/cpp/_std/sys/net/Host.hx (haxe)
+		// ref: hx/libs/std/Socket.cpp (hxcpp)
 		var host = new sys.net.Host('127.0.0.1');
 		untyped host.ip = __cpp__('*(int*)&{0}.sin_addr', this.value);
 		return {

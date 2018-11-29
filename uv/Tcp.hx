@@ -24,7 +24,7 @@ abstract Tcp(Pointer<Tcp_t>) from Pointer<Tcp_t> to Pointer<Tcp_t> {
 		var name = new SockAddrStorage();
 		var namelen = name.sizeof();
 		Uv.tcp_getsockname(asRaw(), name, cast Pointer.addressOf(namelen));
-		var ret = name.asSockAddrIn().getHost();
+		var ret = name.asSockAddrIn().getAddress();
 		name.destroy();
 		return ret;
 	}
@@ -32,7 +32,7 @@ abstract Tcp(Pointer<Tcp_t>) from Pointer<Tcp_t> to Pointer<Tcp_t> {
 		var name = new SockAddrStorage();
 		var namelen = name.sizeof();
 		Uv.tcp_getpeername(asRaw(), name, cast Pointer.addressOf(namelen));
-		var ret = name.asSockAddrIn().getHost();
+		var ret = name.asSockAddrIn().getAddress();
 		name.destroy();
 		return ret;
 	}
