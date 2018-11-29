@@ -3,6 +3,7 @@ package uv;
 import uv.Uv;
 import cpp.*;
 
+@:dce
 abstract SockAddrIn(Pointer<SockAddrIn_s>) from Pointer<SockAddrIn_s> to Pointer<SockAddrIn_s> {
 	public inline function new() this = Stdlib.malloc(Stdlib.sizeof(SockAddrIn_s));
 	public inline function destroy() return Stdlib.free(this);

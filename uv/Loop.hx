@@ -3,6 +3,7 @@ package uv;
 import uv.Uv;
 import cpp.*;
 
+@:dce
 abstract Loop(Pointer<Loop_t>) from Pointer<Loop_t> to Pointer<Loop_t> {
 	public static var DEFAULT(get, null):Loop;
 	static function get_DEFAULT() {
