@@ -20,6 +20,8 @@ abstract Buf(Pointer<Buf_t>) from Pointer<Buf_t> to Pointer<Buf_t> {
 	public static inline function unmanaged(b:RawConstPointer<Buf_t>):UnmanagedBuf return b;
 }
 
+// buf created internally by uv (unmanaged by "us")
+// we should not free the struct, but only the memory base
 @:dce
 abstract UnmanagedBuf(RawConstPointer<Buf_t>) from RawConstPointer<Buf_t> to RawConstPointer<Buf_t> {
 	public inline function free() Stdlib.nativeFree(cast this[0].base);
