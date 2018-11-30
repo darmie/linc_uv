@@ -9,17 +9,19 @@ abstract SockAddrIn(Pointer<SockAddrIn_s>) from Pointer<SockAddrIn_s> to Pointer
 	public inline function destroy() return Stdlib.free(this);
 	@:to public inline function asRaw():RawPointer<SockAddrIn_s> return this.raw;
 	@:to public inline function asRawConst():RawConstPointer<SockAddrIn_s> return this.constRaw;
+	@:to public inline function asRawSockAddr():RawConstPointer<SockAddr_s> return (this.reinterpret():Pointer<SockAddr_s>).raw;
 	@:to public inline function asRawConstSockAddr():RawConstPointer<SockAddr_s> return (this.reinterpret():Pointer<SockAddr_s>).constRaw;
+	@:from public static inline function fromRaw(r:RawPointer<SockAddrIn_s>):SockAddrIn return Pointer.fromRaw(r);
 	
-	public function ip4Addr(host:String, port:Int) return Uv.ip4_addr(host, port, asRaw());
+	public inline function ip4Addr(host:String, port:Int) return Uv.ip4_addr(host, port, asRaw());
 	
-	public inline function getAddress():{host:sys.net.Host, port:Int} {
+	public function getAddress():{host:String, port:Int} {
 		// ref: std/cpp/_std/sys/net/Host.hx (haxe)
 		// ref: hx/libs/std/Socket.cpp (hxcpp)
-		var host = new sys.net.Host('127.0.0.1');
-		untyped host.ip = __cpp__('*(int*)&{0}.sin_addr', this.value);
+		untyped __cpp__('char addr[17] = {\'\\0\'}');
+		Uv.ip4_name(asRaw(), untyped __cpp__('addr'), cast 16);
 		return {
-			host: host,
+			host: untyped __cpp__('::String(addr)'),
 			port: untyped __cpp__('ntohs({0}.sin_port)', this.value),
 		}
 	}

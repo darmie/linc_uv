@@ -3,7 +3,8 @@ package uv;
 import uv.Uv;
 import cpp.*;
 
-@:dce @:forward
+@:dce
+@:build(uv.Data.inject())
 abstract Tcp(Pointer<Tcp_t>) from Pointer<Tcp_t> to Pointer<Tcp_t> {
 	public inline function new() this = Stdlib.malloc(Stdlib.sizeof(Tcp_t));
 	public inline function init(loop) return Uv.tcp_init(loop, asRaw());
@@ -13,12 +14,10 @@ abstract Tcp(Pointer<Tcp_t>) from Pointer<Tcp_t> to Pointer<Tcp_t> {
 	@:to public inline function asHandle():Handle return (this.reinterpret():Pointer<Handle_t>);
 	@:to public inline function asStream():Stream return (this.reinterpret():Pointer<Stream_t>);
 	@:to public inline function asRawStream():RawPointer<Stream_t> return asStream();
+	@:from public static inline function fromStream(s:Stream):Tcp return fromRawStream(s);
 	@:from public static inline function fromRawStream(r:RawPointer<Stream_t>):Tcp return (Pointer.fromRaw(r).reinterpret():Pointer<Tcp_t>);
 	
-	public inline function setData<T>(v:Data<T>) this.value.data = cast v;
-	public inline function getData<T>():Data<T> return untyped __cpp__('{0}.data', this.value);
-	
-	public inline function connect(connect, dest, cb) return Uv.tcp_connect(connect, asRaw(), dest, cb);
+	public inline function connect(req, dest, cb) return Uv.tcp_connect(req, asRaw(), dest, cb);
 	public inline function bind(addr, flags) return Uv.tcp_bind(asRaw(), addr, flags);
 	public inline function getSockAddress() {
 		var name = new SockAddrStorage();

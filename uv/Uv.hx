@@ -10,11 +10,20 @@ import cpp.*;
 #end
 extern class Uv {
 	
+	// error
 	@:native("UV_EOF")
 	public static var EOF:Int;
 	
+	// runmode
+	
 	@:native("UV_RUN_DEFAULT")
 	public static var RUN_DEFAULT:RunMode;
+	
+	// misc
+	@:native("AF_INET")
+	public static var AF_INET:Int;
+	@:native("AF_INET6")
+	public static var AF_INET6:Int;
 	
 	@:native("UV_TCP")
 	public static var TCP:Int;
@@ -58,6 +67,8 @@ extern class Uv {
 	public static function tcp_getpeername(handle:RawConstPointer<Tcp_t>, name:RawPointer<SockAddr_s>, namelen:RawPointer<Int>):Int;
 	
 	// stream
+	@:native("uv_shutdown")
+	public static function shutdown(req:RawPointer<Shutdown_t>, handle:RawPointer<Stream_t>, cb:ShutdownCallback):Int;
 	@:native("uv_listen")
 	public static function listen(handle:RawPointer<Stream_t>, backlog:Int, cb:ConnectionCallback):Int;
 	@:native("uv_accept")
@@ -68,6 +79,10 @@ extern class Uv {
 	public static function read_stop(handle:RawPointer<Stream_t>):Int;
 	@:native("uv_write")
 	public static function write(req:RawPointer<Write_t>, handle:RawPointer<Stream_t>, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, cb:WriteCallback):Int;
+	@:native("uv_is_readable")
+	public static function is_readable(handle:RawConstPointer<Stream_t>):Int;
+	@:native("uv_is_writable")
+	public static function is_writable(handle:RawConstPointer<Stream_t>):Int;
 	
 	// handle
 	@:native("uv_is_active")
@@ -91,17 +106,30 @@ extern class Uv {
 	// @:native("uv_fs_open")
 	// public static function fs_open(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, path:ConstCharStar, flags:Int, cb:FsCallback):Void;
 	
+	// dns
+	@:native("uv_getaddrinfo")
+	public static function getaddrinfo(loop:RawPointer<Loop_t>, req:RawPointer<GetAddrInfo_t>, getaddrinfo_cb:GetAddrInfoCallback, node:ConstCharStar, service:ConstCharStar, hints:RawConstPointer<AddrInfo_s>):Int;
+	@:native("uv_freeaddrinfo")
+	public static function freeaddrinfo(ai:RawPointer<AddrInfo_s>):Void;
+	@:native("uv_getnameinfo")
+	public static function getnameinfo(loop:RawPointer<Loop_t>, req:RawPointer<GetNameInfo_t>, getnameinfo_cb:GetNameInfoCallback, addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
 	
 	// misc
 	@:native("uv_buf_init")
 	public static function buf_init(base:RawPointer<Char>, len:UInt32):Buf_t;
 	@:native("uv_ip4_addr")
 	public static function ip4_addr(ip:String, port:Int, addr:RawPointer<SockAddrIn_s>):Int;
+	@:native("uv_ip4_name")
+	public static function ip4_name(src:RawConstPointer<SockAddrIn_s>, dst:RawPointer<Char>, size:Size_t):Int;
 	@:native("uv_hrtime")
 	public static function hrtime():UInt64_t;
+	@:native("uv_inet_ntop")
+	public static function inet_ntop(af:Int, src:RawConstPointer<cpp.Void>, dst:RawPointer<Char>, size:Size_t):Int;
+	@:native("uv_inet_pton")
+	public static function inet_pton(af:Int, src:ConstCharStar, dst:RawPointer<cpp.Void>):Int;
 }
 
-
+// enums
 
 @:include('linc_uv.h')
 @:native('uv_run_mode')
@@ -112,6 +140,8 @@ extern class RunMode {}
 @:native('uv_handle_type')
 @:unreflective
 extern class HandleType {}
+
+// handles
 
 @:include('linc_uv.h')
 @:native('uv_handle_t')
@@ -152,18 +182,6 @@ extern class Fs_t extends Handle_t {}
 extern class Stream_t extends Handle_t {}
 
 @:include('linc_uv.h')
-@:native('uv_connect_t')
-@:unreflective
-@:structAccess
-extern class Connect_t extends Handle_t {}
-
-@:include('linc_uv.h')
-@:native('uv_write_t')
-@:unreflective
-@:structAccess
-extern class Write_t extends Handle_t {}
-
-@:include('linc_uv.h')
 @:native('uv_buf_t')
 @:unreflective
 @:structAccess
@@ -171,6 +189,48 @@ extern class Buf_t {
 	var base:CastCharStar;
 	var len:Int;
 }
+
+// req
+
+@:include('linc_uv.h')
+@:native('uv_shutdown_t')
+@:unreflective
+@:structAccess
+extern class Shutdown_t extends Handle_t {
+	var handle:RawPointer<Stream_t>;
+}
+
+@:include('linc_uv.h')
+@:native('uv_connect_t')
+@:unreflective
+@:structAccess
+extern class Connect_t extends Handle_t {
+	var handle:RawPointer<Stream_t>;
+}
+
+@:include('linc_uv.h')
+@:native('uv_write_t')
+@:unreflective
+@:structAccess
+extern class Write_t extends Handle_t {
+	var handle:RawPointer<Stream_t>;
+}
+
+@:include('linc_uv.h')
+@:native('uv_getaddrinfo_t')
+@:unreflective
+@:structAccess
+extern class GetAddrInfo_t extends Handle_t {}
+
+@:include('linc_uv.h')
+@:native('uv_getnameinfo_t')
+@:unreflective
+@:structAccess
+extern class GetNameInfo_t extends Handle_t {}
+
+
+
+// misc
 
 @:include('linc_uv.h')
 @:native('file')
@@ -197,6 +257,21 @@ extern class SockAddrIn_s {}
 extern class SockAddrStorage_s {}
 
 @:include('linc_uv.h')
+@:native('addrinfo')
+@:unreflective
+@:structAccess
+extern class AddrInfo_s {
+	var ai_flags:Int;
+	var ai_family:Int;
+	var ai_socktype:Int;
+	var ai_protocol:Int;
+	// var ai_addrlen:socklen_t;
+	var ai_addr:RawPointer<SockAddr_s>;
+	var ai_canonname:RawPointer<Char>;
+	var ai_next:RawPointer<AddrInfo>;
+}
+
+@:include('linc_uv.h')
 @:native('size_t')
 @:unreflective
 extern class Size_t {}
@@ -216,6 +291,7 @@ extern class UInt64_t {}
 @:unreflective
 extern class Long {}
 
+typedef ShutdownCallback = Callable<RawPointer<Shutdown_t>->Int->Void>;
 typedef ConnectCallback = Callable<RawPointer<Connect_t>->Int->Void>;
 typedef ConnectionCallback = Callable<RawPointer<Stream_t>->Int->Void>;
 typedef AllocCallback = Callable<RawPointer<Handle_t>->Size_t->RawPointer<Buf_t>->Void>;
@@ -223,3 +299,5 @@ typedef ReadCallback = Callable<RawPointer<Stream_t>->SSize_t->RawConstPointer<B
 typedef WriteCallback = Callable<RawPointer<Write_t>->Int->Void>;
 typedef CloseCallback = Callable<RawPointer<Handle_t>->Void>;
 typedef TimerCallback = Callable<RawPointer<Timer_t>->Void>;
+typedef GetAddrInfoCallback = Callable<RawPointer<GetAddrInfo_t>->Int->RawPointer<AddrInfo_s>->Void>;
+typedef GetNameInfoCallback = Callable<RawPointer<GetNameInfo_t>->Int->ConstCharStar->ConstCharStar->Void>;
