@@ -13,6 +13,6 @@ abstract Connect(Pointer<Connect_t>) from Pointer<Connect_t> to Pointer<Connect_
 	public inline function destroy() return Stdlib.free(this);
 	
 	@:to public inline function asRaw():RawPointer<Connect_t> return this.raw;
-	@:to public inline function asHandle():Handle return (this.reinterpret():Pointer<Handle_t>);
+	@:to public inline function asReq():Req return (this.reinterpret():Pointer<Req_t>);
 	@:from public static inline function fromRaw(r:RawPointer<Connect_t>):Connect return Pointer.fromRaw(r);
 }

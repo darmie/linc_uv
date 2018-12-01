@@ -50,27 +50,29 @@ class Foo {
 			trace('accepted');
 			trace(client.getPeerAddress());
 			trace(client.getSockAddress());
+			trace(client.asStream().readStop());
 			client.asStream().readStart(Callable.fromStaticFunction(onAlloc), Callable.fromStaticFunction(onRead));
 		} else {
 			client.asHandle().close(null);
 		}
 	}
 	
-	static function onAlloc(handle:RawPointer<Handle_t>, suggestedSize:Size_t, buf:RawPointer<Buf_t>) {
+	static function onAlloc(handle:RawPointer<Handle_t>, suggestedSize:SizeT, buf:RawPointer<Buf_t>) {
 		var suggestedSize:Int = cast suggestedSize;
 		var base:Pointer<Char> = cast Stdlib.nativeMalloc(suggestedSize);
 		buf[0].base = cast base;
 		buf[0].len = suggestedSize;
 	}
 	
-	static function onRead(handle:RawPointer<Stream_t>, nread:SSize_t, buf:RawConstPointer<Buf_t>) {
+	static function onRead(handle:RawPointer<Stream_t>, nread:SSizeT, buf:RawConstPointer<Buf_t>) {
 		var client:Tcp = handle;
 		var nread:Int = cast nread;
 		if(nread > 0) {
 			var req = new Write();
-			var writeBuf = new Buf(nread);
+			var writeBuf = new Buf();
+			writeBuf.alloc(nread);
 			req.setData(writeBuf);
-			writeBuf.copyFrom(buf);
+			writeBuf.copyFrom(buf, nread);
 			client.asStream().write(req, writeBuf, 1, Callable.fromStaticFunction(onWrite));
 		}
 		if(nread < 0) {

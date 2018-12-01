@@ -13,6 +13,6 @@ abstract Write(Pointer<Write_t>) from Pointer<Write_t> to Pointer<Write_t> {
 	public inline function destroy() return Stdlib.free(this);
 	
 	@:to public inline function asRaw():RawPointer<Write_t> return this.raw;
-	@:to public inline function asHandle():Handle return (this.reinterpret():Pointer<Handle_t>);
+	@:to public inline function asReq():Req return (this.reinterpret():Pointer<Req_t>);
 	@:from public static inline function fromRaw(r:RawPointer<Write_t>):Write return Pointer.fromRaw(r);
 }

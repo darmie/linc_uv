@@ -13,6 +13,6 @@ abstract Shutdown(Pointer<Shutdown_t>) from Pointer<Shutdown_t> to Pointer<Shutd
 	public inline function destroy() return Stdlib.free(this);
 	
 	@:to public inline function asRaw():RawPointer<Shutdown_t> return this.raw;
-	@:to public inline function asHandle():Handle return (this.reinterpret():Pointer<Handle_t>);
+	@:to public inline function asReq():Req return (this.reinterpret():Pointer<Req_t>);
 	@:from public static inline function fromRaw(r:RawPointer<Shutdown_t>):Shutdown return Pointer.fromRaw(r);
 }

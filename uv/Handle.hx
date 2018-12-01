@@ -5,6 +5,9 @@ import cpp.*;
 
 @:dce
 abstract Handle(Pointer<Handle_t>) from Pointer<Handle_t> to Pointer<Handle_t> {
+	public inline function new() this = Stdlib.malloc(Stdlib.sizeof(Handle_t));
+	public inline function destroy() return Stdlib.free(this);
+	
 	@:to public inline function asRaw():RawPointer<Handle_t> return this.raw;
 	@:from public static inline function fromRaw(r:RawPointer<Handle_t>):Handle return Pointer.fromRaw(r);
 	
