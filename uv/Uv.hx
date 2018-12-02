@@ -11,15 +11,164 @@ import cpp.*;
 extern class Uv {
 	
 	// error
-	@:native("UV_EOF")
-	public static var EOF:Int;
+	@:native("UV_E2BIG")
+	public static var E2BIG:Int;
+	@:native("UV_EACCES")
+	public static var EACCES:Int;
+	@:native("UV_EADDRINUSE")
+	public static var EADDRINUSE:Int;
+	@:native("UV_EADDRNOTAVAIL")
+	public static var EADDRNOTAVAIL:Int;
+	@:native("UV_EAFNOSUPPORT")
+	public static var EAFNOSUPPORT:Int;
+	@:native("UV_EAGAIN")
+	public static var EAGAIN:Int;
+	@:native("UV_EAI_ADDRFAMILY")
+	public static var EAI_ADDRFAMILY:Int;
+	@:native("UV_EAI_AGAIN")
+	public static var EAI_AGAIN:Int;
+	@:native("UV_EAI_BADFLAGS")
+	public static var EAI_BADFLAGS:Int;
+	@:native("UV_EAI_BADHINTS")
+	public static var EAI_BADHINTS:Int;
+	@:native("UV_EAI_CANCELED")
+	public static var EAI_CANCELED:Int;
+	@:native("UV_EAI_FAIL")
+	public static var EAI_FAIL:Int;
+	@:native("UV_EAI_FAMILY")
+	public static var EAI_FAMILY:Int;
+	@:native("UV_EAI_MEMORY")
+	public static var EAI_MEMORY:Int;
+	@:native("UV_EAI_NODATA")
+	public static var EAI_NODATA:Int;
+	@:native("UV_EAI_NONAME")
+	public static var EAI_NONAME:Int;
+	@:native("UV_EAI_OVERFLOW")
+	public static var EAI_OVERFLOW:Int;
+	@:native("UV_EAI_PROTOCOL")
+	public static var EAI_PROTOCOL:Int;
+	@:native("UV_EAI_SERVICE")
+	public static var EAI_SERVICE:Int;
+	@:native("UV_EAI_SOCKTYPE")
+	public static var EAI_SOCKTYPE:Int;
+	@:native("UV_EALREADY")
+	public static var EALREADY:Int;
+	@:native("UV_EBADF")
+	public static var EBADF:Int;
+	@:native("UV_EBUSY")
+	public static var EBUSY:Int;
+	@:native("UV_ECANCELED")
+	public static var ECANCELED:Int;
+	@:native("UV_ECHARSET")
+	public static var ECHARSET:Int;
+	@:native("UV_ECONNABORTED")
+	public static var ECONNABORTED:Int;
+	@:native("UV_ECONNREFUSED")
+	public static var ECONNREFUSED:Int;
+	@:native("UV_ECONNRESET")
+	public static var ECONNRESET:Int;
+	@:native("UV_EDESTADDRREQ")
+	public static var EDESTADDRREQ:Int;
+	@:native("UV_EEXIST")
+	public static var EEXIST:Int;
+	@:native("UV_EFAULT")
+	public static var EFAULT:Int;
+	@:native("UV_EFBIG")
+	public static var EFBIG:Int;
+	@:native("UV_EHOSTUNREACH")
+	public static var EHOSTUNREACH:Int;
+	@:native("UV_EINTR")
+	public static var EINTR:Int;
 	@:native("UV_EINVAL")
 	public static var EINVAL:Int;
+	@:native("UV_EIO")
+	public static var EIO:Int;
+	@:native("UV_EISCONN")
+	public static var EISCONN:Int;
+	@:native("UV_EISDIR")
+	public static var EISDIR:Int;
+	@:native("UV_ELOOP")
+	public static var ELOOP:Int;
+	@:native("UV_EMFILE")
+	public static var EMFILE:Int;
+	@:native("UV_EMSGSIZE")
+	public static var EMSGSIZE:Int;
+	@:native("UV_ENAMETOOLONG")
+	public static var ENAMETOOLONG:Int;
+	@:native("UV_ENETDOWN")
+	public static var ENETDOWN:Int;
+	@:native("UV_ENETUNREACH")
+	public static var ENETUNREACH:Int;
+	@:native("UV_ENFILE")
+	public static var ENFILE:Int;
+	@:native("UV_ENOBUFS")
+	public static var ENOBUFS:Int;
+	@:native("UV_ENODEV")
+	public static var ENODEV:Int;
+	@:native("UV_ENOENT")
+	public static var ENOENT:Int;
+	@:native("UV_ENOMEM")
+	public static var ENOMEM:Int;
+	@:native("UV_ENONET")
+	public static var ENONET:Int;
+	@:native("UV_ENOPROTOOPT")
+	public static var ENOPROTOOPT:Int;
+	@:native("UV_ENOSPC")
+	public static var ENOSPC:Int;
+	@:native("UV_ENOSYS")
+	public static var ENOSYS:Int;
+	@:native("UV_ENOTCONN")
+	public static var ENOTCONN:Int;
+	@:native("UV_ENOTDIR")
+	public static var ENOTDIR:Int;
+	@:native("UV_ENOTEMPTY")
+	public static var ENOTEMPTY:Int;
+	@:native("UV_ENOTSOCK")
+	public static var ENOTSOCK:Int;
+	@:native("UV_ENOTSUP")
+	public static var ENOTSUP:Int;
+	@:native("UV_EPERM")
+	public static var EPERM:Int;
+	@:native("UV_EPIPE")
+	public static var EPIPE:Int;
+	@:native("UV_EPROTO")
+	public static var EPROTO:Int;
+	@:native("UV_EPROTONOSUPPORT")
+	public static var EPROTONOSUPPORT:Int;
+	@:native("UV_EPROTOTYPE")
+	public static var EPROTOTYPE:Int;
+	@:native("UV_ERANGE")
+	public static var ERANGE:Int;
+	@:native("UV_EROFS")
+	public static var EROFS:Int;
+	@:native("UV_ESHUTDOWN")
+	public static var ESHUTDOWN:Int;
+	@:native("UV_ESPIPE")
+	public static var ESPIPE:Int;
+	@:native("UV_ESRCH")
+	public static var ESRCH:Int;
+	@:native("UV_ETIMEDOUT")
+	public static var ETIMEDOUT:Int;
+	@:native("UV_ETXTBSY")
+	public static var ETXTBSY:Int;
+	@:native("UV_EXDEV")
+	public static var EXDEV:Int;
+	@:native("UV_UNKNOWN")
+	public static var UNKNOWN:Int;
+	@:native("UV_EOF")
+	public static var EOF:Int;
+	@:native("UV_ENXIO")
+	public static var ENXIO:Int;
+	@:native("UV_EMLINK")
+	public static var EMLINK:Int;
 	
-	// runmode
-	
+	// uv_run_mode
 	@:native("UV_RUN_DEFAULT")
 	public static var RUN_DEFAULT:RunMode;
+    @:native("UV_RUN_ONCE")
+	public static var RUN_ONCE:RunMode;
+    @:native("UV_RUN_NOWAIT")
+	public static var RUN_NOWAIT:RunMode;
 	
 	// misc
 	@:native("AF_INET")

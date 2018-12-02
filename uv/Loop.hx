@@ -4,12 +4,10 @@ import uv.Uv;
 import cpp.*;
 
 @:dce
+@:build(uv.Data.inject())
 abstract Loop(Pointer<Loop_t>) from Pointer<Loop_t> to Pointer<Loop_t> {
 	public static var DEFAULT(get, null):Loop;
-	static function get_DEFAULT() {
-		if(DEFAULT == null) DEFAULT = Pointer.fromRaw(Uv.default_loop());
-		return DEFAULT;
-	}
+	static inline function get_DEFAULT() return Pointer.fromRaw(Uv.default_loop());
 	
 	public inline function new() this = Stdlib.malloc(Stdlib.sizeof(Loop_t));
 	public inline function init() return Uv.loop_init(asRaw());
