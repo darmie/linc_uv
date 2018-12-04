@@ -162,6 +162,50 @@ extern class Uv {
 	@:native("UV_EMLINK")
 	public static var EMLINK:Int;
 	
+	// fs open mode
+	@:native("UV_FS_O_APPEND")
+	public static var FS_O_APPEND:Int;
+	@:native("UV_FS_O_CREAT")
+	public static var FS_O_CREAT:Int;
+	@:native("UV_FS_O_DIRECT")
+	public static var FS_O_DIRECT:Int;
+	@:native("UV_FS_O_DIRECTORY")
+	public static var FS_O_DIRECTORY:Int;
+	@:native("UV_FS_O_DSYNC")
+	public static var FS_O_DSYNC:Int;
+	@:native("UV_FS_O_EXCL")
+	public static var FS_O_EXCL:Int;
+	@:native("UV_FS_O_EXLOCK")
+	public static var FS_O_EXLOCK:Int;
+	@:native("UV_FS_O_NOATIME")
+	public static var FS_O_NOATIME:Int;
+	@:native("UV_FS_O_NOCTTY")
+	public static var FS_O_NOCTTY:Int;
+	@:native("UV_FS_O_NOFOLLOW")
+	public static var FS_O_NOFOLLOW:Int;
+	@:native("UV_FS_O_NONBLOCK")
+	public static var FS_O_NONBLOCK:Int;
+	@:native("UV_FS_O_RDONLY")
+	public static var FS_O_RDONLY:Int;
+	@:native("UV_FS_O_RDWR")
+	public static var FS_O_RDWR:Int;
+	@:native("UV_FS_O_SYMLINK")
+	public static var FS_O_SYMLINK:Int;
+	@:native("UV_FS_O_SYNC")
+	public static var FS_O_SYNC:Int;
+	@:native("UV_FS_O_TRUNC")
+	public static var FS_O_TRUNC:Int;
+	@:native("UV_FS_O_WRONLY")
+	public static var FS_O_WRONLY:Int;
+	@:native("UV_FS_O_RANDOM")
+	public static var FS_O_RANDOM:Int;
+	@:native("UV_FS_O_SHORT_LIVED")
+	public static var FS_O_SHORT_LIVED:Int;
+	@:native("UV_FS_O_SEQUENTIAL")
+	public static var FS_O_SEQUENTIAL:Int;
+	@:native("UV_FS_O_TEMPORARY")
+	public static var FS_O_TEMPORARY:Int;
+	
 	// uv_run_mode
 	@:native("UV_RUN_DEFAULT")
 	public static var RUN_DEFAULT:RunMode;
@@ -252,10 +296,23 @@ extern class Uv {
 	public static function handle_size(type:HandleType):SizeT;
 	
 	// fs
-	// @:native("uv_fs_close")
-	// public static function fs_close(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File_s, cb:Callable<FsCallback>):Void;
-	// @:native("uv_fs_open")
-	// public static function fs_open(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, path:ConstCharStar, flags:Int, cb:Callable<FsCallback>):Void;
+	@:native("uv_fs_open")
+	public static function fs_open(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, path:ConstCharStar, flags:Int, mode:Int, cb:Callable<FsCallback>):Int;
+	@:native("uv_fs_close")
+	public static function fs_close(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, cb:Callable<FsCallback>):Int;
+	@:native("uv_fs_read")
+	public static function fs_read(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, offset:UInt64, cb:Callable<FsCallback>):Int;
+	@:native("uv_fs_unlink")
+	public static function fs_unlink(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, path:ConstCharStar, cb:Callable<FsCallback>):Int;
+	@:native("uv_fs_write")
+	public static function fs_write(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, offset:UInt64, cb:Callable<FsCallback>):Int;
+	
+	// pipe
+	@:native("uv_pipe_init")
+	public static function pipe_init(loop:RawPointer<Loop_t>, handle:RawPointer<Pipe_t>, ipc:Int):Int;
+	@:native("uv_pipe_open")
+	public static function pipe_open(handle:RawPointer<Pipe_t>, file:File):Int;
+	
 	
 	// dns
 	@:native("uv_getaddrinfo")
@@ -323,16 +380,16 @@ extern class Loop_t extends Handle_t {}
 extern class Tcp_t extends Stream_t {}
 
 @:include('linc_uv.h')
+@:native('uv_pipe_t')
+@:unreflective
+@:structAccess
+extern class Pipe_t extends Stream_t {}
+
+@:include('linc_uv.h')
 @:native('uv_timer_t')
 @:unreflective
 @:structAccess
 extern class Timer_t extends Handle_t {}
-
-@:include('linc_uv.h')
-@:native('uv_fs_t')
-@:unreflective
-@:structAccess
-extern class Fs_t extends Handle_t {}
 
 @:include('linc_uv.h')
 @:native('uv_stream_t')
@@ -355,7 +412,7 @@ extern class Buf_t {
 @:native('uv_shutdown_t')
 @:unreflective
 @:structAccess
-extern class Shutdown_t extends Handle_t {
+extern class Shutdown_t extends Req_t {
 	var handle:RawPointer<Stream_t>;
 }
 
@@ -363,7 +420,7 @@ extern class Shutdown_t extends Handle_t {
 @:native('uv_connect_t')
 @:unreflective
 @:structAccess
-extern class Connect_t extends Handle_t {
+extern class Connect_t extends Req_t {
 	var handle:RawPointer<Stream_t>;
 }
 
@@ -371,7 +428,7 @@ extern class Connect_t extends Handle_t {
 @:native('uv_write_t')
 @:unreflective
 @:structAccess
-extern class Write_t extends Handle_t {
+extern class Write_t extends Req_t {
 	var handle:RawPointer<Stream_t>;
 }
 
@@ -379,23 +436,25 @@ extern class Write_t extends Handle_t {
 @:native('uv_getaddrinfo_t')
 @:unreflective
 @:structAccess
-extern class GetAddrInfo_t extends Handle_t {}
+extern class GetAddrInfo_t extends Req_t {}
 
 @:include('linc_uv.h')
 @:native('uv_getnameinfo_t')
 @:unreflective
 @:structAccess
-extern class GetNameInfo_t extends Handle_t {}
+extern class GetNameInfo_t extends Req_t {}
+
+@:include('linc_uv.h')
+@:native('uv_fs_t')
+@:unreflective
+@:structAccess
+extern class Fs_t extends Req_t {
+	var result:Int;
+}
 
 
 
 // misc
-
-@:include('linc_uv.h')
-@:native('file')
-@:unreflective
-@:structAccess
-extern class File_s {}
 
 @:include('linc_uv.h')
 @:native('sockaddr')
@@ -430,6 +489,11 @@ extern class AddrInfo_s {
 	var ai_next:RawPointer<AddrInfo>;
 }
 
+@:include('linc_uv.h')
+@:native("uv_file")
+@:scalar @:coreType @:notNull
+extern abstract File from(Int) to(Int) {}
+
 @:native("ssize_t")
 @:scalar @:coreType @:notNull
 extern abstract SSizeT from(Int) to(Int) {}
@@ -448,3 +512,4 @@ typedef CloseCallback = RawPointer<Handle_t>->Void;
 typedef TimerCallback = RawPointer<Timer_t>->Void;
 typedef GetAddrInfoCallback = RawPointer<GetAddrInfo_t>->Int->RawPointer<AddrInfo_s>->Void;
 typedef GetNameInfoCallback = RawPointer<GetNameInfo_t>->Int->ConstCharStar->ConstCharStar->Void;
+typedef FsCallback = RawPointer<Fs_t>->Void;

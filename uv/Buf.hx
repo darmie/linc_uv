@@ -27,6 +27,11 @@ abstract Buf(Pointer<Buf_t>) from Pointer<Buf_t> to Pointer<Buf_t> {
 		var raw = bytes.getData().address(0).constRaw;
 		copyFromAddress(untyped __cpp__('(char*){0}', raw), size);
 	}
+	public inline function copyToAddress(dest:CastCharStar, size:Int) Stdlib.nativeMemcpy(cast dest, cast this.value.base, size);
+	public inline function copyToBytes(bytes:haxe.io.Bytes, size:Int) {
+		var raw = bytes.getData().address(0).constRaw;
+		copyToAddress(untyped __cpp__('(char*){0}', raw), size);
+	}
 	public static inline function unmanaged(b:RawConstPointer<Buf_t>):UnmanagedBuf return b;
 }
 
