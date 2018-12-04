@@ -284,8 +284,8 @@ extern class Uv {
 
 @:include('linc_uv.h')
 @:native('uv_run_mode')
-@:unreflective
-extern class RunMode {}
+@:scalar @:coreType @:notNull
+extern abstract RunMode from(Int) to(Int) {}
 
 @:include('linc_uv.h')
 @:native('uv_handle_type')
