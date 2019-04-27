@@ -1,324 +1,515 @@
 package uv;
-import cpp.Callable;
+
+import cpp.*;
+
 @:keep
 @:include('linc_uv.h')
 #if !display
 @:build(linc.Linc.touch())
 @:build(linc.Linc.xml('uv'))
 #end
-
 extern class Uv {
-/*
- * This flag can be used with uv_fs_symlink() on Windows to specify whether
- * path argument points to a directory.
- */
-	@:native("UV_FS_SYMLINK_DIR")
-	public static var FS_SYMLINK_DIR;
-/*
- * This flag can be used with uv_fs_symlink() on Windows to specify whether
- * the symlink is to be created using junction points.
- */
-	@:native("UV_FS_SYMLINK_JUNCTION")
-	public static var FS_SYMLINK_JUNCTION;
 	
+	// error
+	@:native("UV_E2BIG")
+	public static var E2BIG:Int;
+	@:native("UV_EACCES")
+	public static var EACCES:Int;
+	@:native("UV_EADDRINUSE")
+	public static var EADDRINUSE:Int;
+	@:native("UV_EADDRNOTAVAIL")
+	public static var EADDRNOTAVAIL:Int;
+	@:native("UV_EAFNOSUPPORT")
+	public static var EAFNOSUPPORT:Int;
+	@:native("UV_EAGAIN")
+	public static var EAGAIN:Int;
+	@:native("UV_EAI_ADDRFAMILY")
+	public static var EAI_ADDRFAMILY:Int;
+	@:native("UV_EAI_AGAIN")
+	public static var EAI_AGAIN:Int;
+	@:native("UV_EAI_BADFLAGS")
+	public static var EAI_BADFLAGS:Int;
+	@:native("UV_EAI_BADHINTS")
+	public static var EAI_BADHINTS:Int;
+	@:native("UV_EAI_CANCELED")
+	public static var EAI_CANCELED:Int;
+	@:native("UV_EAI_FAIL")
+	public static var EAI_FAIL:Int;
+	@:native("UV_EAI_FAMILY")
+	public static var EAI_FAMILY:Int;
+	@:native("UV_EAI_MEMORY")
+	public static var EAI_MEMORY:Int;
+	@:native("UV_EAI_NODATA")
+	public static var EAI_NODATA:Int;
+	@:native("UV_EAI_NONAME")
+	public static var EAI_NONAME:Int;
+	@:native("UV_EAI_OVERFLOW")
+	public static var EAI_OVERFLOW:Int;
+	@:native("UV_EAI_PROTOCOL")
+	public static var EAI_PROTOCOL:Int;
+	@:native("UV_EAI_SERVICE")
+	public static var EAI_SERVICE:Int;
+	@:native("UV_EAI_SOCKTYPE")
+	public static var EAI_SOCKTYPE:Int;
+	@:native("UV_EALREADY")
+	public static var EALREADY:Int;
+	@:native("UV_EBADF")
+	public static var EBADF:Int;
+	@:native("UV_EBUSY")
+	public static var EBUSY:Int;
+	@:native("UV_ECANCELED")
+	public static var ECANCELED:Int;
+	@:native("UV_ECHARSET")
+	public static var ECHARSET:Int;
+	@:native("UV_ECONNABORTED")
+	public static var ECONNABORTED:Int;
+	@:native("UV_ECONNREFUSED")
+	public static var ECONNREFUSED:Int;
+	@:native("UV_ECONNRESET")
+	public static var ECONNRESET:Int;
+	@:native("UV_EDESTADDRREQ")
+	public static var EDESTADDRREQ:Int;
+	@:native("UV_EEXIST")
+	public static var EEXIST:Int;
+	@:native("UV_EFAULT")
+	public static var EFAULT:Int;
+	@:native("UV_EFBIG")
+	public static var EFBIG:Int;
+	@:native("UV_EHOSTUNREACH")
+	public static var EHOSTUNREACH:Int;
+	@:native("UV_EINTR")
+	public static var EINTR:Int;
+	@:native("UV_EINVAL")
+	public static var EINVAL:Int;
+	@:native("UV_EIO")
+	public static var EIO:Int;
+	@:native("UV_EISCONN")
+	public static var EISCONN:Int;
+	@:native("UV_EISDIR")
+	public static var EISDIR:Int;
+	@:native("UV_ELOOP")
+	public static var ELOOP:Int;
+	@:native("UV_EMFILE")
+	public static var EMFILE:Int;
+	@:native("UV_EMSGSIZE")
+	public static var EMSGSIZE:Int;
+	@:native("UV_ENAMETOOLONG")
+	public static var ENAMETOOLONG:Int;
+	@:native("UV_ENETDOWN")
+	public static var ENETDOWN:Int;
+	@:native("UV_ENETUNREACH")
+	public static var ENETUNREACH:Int;
+	@:native("UV_ENFILE")
+	public static var ENFILE:Int;
+	@:native("UV_ENOBUFS")
+	public static var ENOBUFS:Int;
+	@:native("UV_ENODEV")
+	public static var ENODEV:Int;
+	@:native("UV_ENOENT")
+	public static var ENOENT:Int;
+	@:native("UV_ENOMEM")
+	public static var ENOMEM:Int;
+	@:native("UV_ENONET")
+	public static var ENONET:Int;
+	@:native("UV_ENOPROTOOPT")
+	public static var ENOPROTOOPT:Int;
+	@:native("UV_ENOSPC")
+	public static var ENOSPC:Int;
+	@:native("UV_ENOSYS")
+	public static var ENOSYS:Int;
+	@:native("UV_ENOTCONN")
+	public static var ENOTCONN:Int;
+	@:native("UV_ENOTDIR")
+	public static var ENOTDIR:Int;
+	@:native("UV_ENOTEMPTY")
+	public static var ENOTEMPTY:Int;
+	@:native("UV_ENOTSOCK")
+	public static var ENOTSOCK:Int;
+	@:native("UV_ENOTSUP")
+	public static var ENOTSUP:Int;
+	@:native("UV_EPERM")
+	public static var EPERM:Int;
+	@:native("UV_EPIPE")
+	public static var EPIPE:Int;
+	@:native("UV_EPROTO")
+	public static var EPROTO:Int;
+	@:native("UV_EPROTONOSUPPORT")
+	public static var EPROTONOSUPPORT:Int;
+	@:native("UV_EPROTOTYPE")
+	public static var EPROTOTYPE:Int;
+	@:native("UV_ERANGE")
+	public static var ERANGE:Int;
+	@:native("UV_EROFS")
+	public static var EROFS:Int;
+	@:native("UV_ESHUTDOWN")
+	public static var ESHUTDOWN:Int;
+	@:native("UV_ESPIPE")
+	public static var ESPIPE:Int;
+	@:native("UV_ESRCH")
+	public static var ESRCH:Int;
+	@:native("UV_ETIMEDOUT")
+	public static var ETIMEDOUT:Int;
+	@:native("UV_ETXTBSY")
+	public static var ETXTBSY:Int;
+	@:native("UV_EXDEV")
+	public static var EXDEV:Int;
+	@:native("UV_UNKNOWN")
+	public static var UNKNOWN:Int;
+	@:native("UV_EOF")
+	public static var EOF:Int;
+	@:native("UV_ENXIO")
+	public static var ENXIO:Int;
+	@:native("UV_EMLINK")
+	public static var EMLINK:Int;
+	
+	// fs open mode
+	@:native("UV_FS_O_APPEND")
+	public static var FS_O_APPEND:Int;
+	@:native("UV_FS_O_CREAT")
+	public static var FS_O_CREAT:Int;
+	@:native("UV_FS_O_DIRECT")
+	public static var FS_O_DIRECT:Int;
+	@:native("UV_FS_O_DIRECTORY")
+	public static var FS_O_DIRECTORY:Int;
+	@:native("UV_FS_O_DSYNC")
+	public static var FS_O_DSYNC:Int;
+	@:native("UV_FS_O_EXCL")
+	public static var FS_O_EXCL:Int;
+	@:native("UV_FS_O_EXLOCK")
+	public static var FS_O_EXLOCK:Int;
+	@:native("UV_FS_O_NOATIME")
+	public static var FS_O_NOATIME:Int;
+	@:native("UV_FS_O_NOCTTY")
+	public static var FS_O_NOCTTY:Int;
+	@:native("UV_FS_O_NOFOLLOW")
+	public static var FS_O_NOFOLLOW:Int;
+	@:native("UV_FS_O_NONBLOCK")
+	public static var FS_O_NONBLOCK:Int;
+	@:native("UV_FS_O_RDONLY")
+	public static var FS_O_RDONLY:Int;
+	@:native("UV_FS_O_RDWR")
+	public static var FS_O_RDWR:Int;
+	@:native("UV_FS_O_SYMLINK")
+	public static var FS_O_SYMLINK:Int;
+	@:native("UV_FS_O_SYNC")
+	public static var FS_O_SYNC:Int;
+	@:native("UV_FS_O_TRUNC")
+	public static var FS_O_TRUNC:Int;
+	@:native("UV_FS_O_WRONLY")
+	public static var FS_O_WRONLY:Int;
+	@:native("UV_FS_O_RANDOM")
+	public static var FS_O_RANDOM:Int;
+	@:native("UV_FS_O_SHORT_LIVED")
+	public static var FS_O_SHORT_LIVED:Int;
+	@:native("UV_FS_O_SEQUENTIAL")
+	public static var FS_O_SEQUENTIAL:Int;
+	@:native("UV_FS_O_TEMPORARY")
+	public static var FS_O_TEMPORARY:Int;
+	
+	// uv_run_mode
+	@:native("UV_RUN_DEFAULT")
+	public static var RUN_DEFAULT:RunMode;
+    @:native("UV_RUN_ONCE")
+	public static var RUN_ONCE:RunMode;
+    @:native("UV_RUN_NOWAIT")
+	public static var RUN_NOWAIT:RunMode;
+	
+	// misc
+	@:native("AF_INET")
+	public static var AF_INET:Int;
+	@:native("AF_INET6")
+	public static var AF_INET6:Int;
+	
+	@:native("UV_TCP")
+	public static var TCP:Int;
+	@:native("UV_NAMED_PIPE")
+	public static var NAMED_PIPE:Int;
+	@:native("UV_TTY")
+	public static var TTY:Int;
+	
+	// error
 	@:native("uv_strerror")
-	public static function strerror(err:Int):String;
-	
+	public static function strerror(code:Int):ConstCharStar;
 	@:native("uv_err_name")
-	public static function err_name(err:Int):String;
+	public static function err_name(code:Int):ConstCharStar;
 	
-	@:native("uv_translate_sys_error")
-	public static function translate_sys_error(sys_errno:Int):Int;
+	// loop
+	@:native("uv_default_loop")
+	public static function default_loop():RawPointer<Loop_t>;
+	@:native("uv_loop_init")
+	public static function loop_init(loop:RawPointer<Loop_t>):Int;
+	@:native("uv_run")
+	public static function run(loop:RawPointer<Loop_t>, mode:RunMode):Int;
+	
+	// timer
+	@:native("uv_timer_init")
+	public static function timer_init(loop:RawPointer<Loop_t>, timer:RawPointer<Timer_t>):Int;
+	@:native("uv_timer_start")
+	public static function timer_start(timer:RawPointer<Timer_t>, cb:Callable<TimerCallback>, timeout:UInt64, repeat:UInt64):Int;
+	@:native("uv_timer_stop")
+	public static function timer_stop(timer:RawPointer<Timer_t>):Int;
+	
+	// tcp
+	@:native("uv_tcp_init")
+	public static function tcp_init(loop:RawPointer<Loop_t>, handle:RawPointer<Tcp_t>):Int;
+	@:native("uv_tcp_bind")
+	public static function tcp_bind(handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
+	@:native("uv_tcp_connect")
+	public static function tcp_connect(req:RawPointer<Connect_t>, handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>, cb:Callable<ConnectCallback>):Int;
+	@:native("uv_tcp_getsockname")
+	public static function tcp_getsockname(handle:RawConstPointer<Tcp_t>, name:RawPointer<SockAddr_s>, namelen:RawPointer<Int>):Int;
+	@:native("uv_tcp_getpeername")
+	public static function tcp_getpeername(handle:RawConstPointer<Tcp_t>, name:RawPointer<SockAddr_s>, namelen:RawPointer<Int>):Int;
+	
+	// stream
+	@:native("uv_shutdown")
+	public static function shutdown(req:RawPointer<Shutdown_t>, handle:RawPointer<Stream_t>, cb:Callable<ShutdownCallback>):Int;
+	@:native("uv_listen")
+	public static function listen(handle:RawPointer<Stream_t>, backlog:Int, cb:Callable<ConnectionCallback>):Int;
+	@:native("uv_accept")
+	public static function accept(handle:RawPointer<Stream_t>, client:RawPointer<Stream_t>):Int;
+	@:native("uv_read_start")
+	public static function read_start(handle:RawPointer<Stream_t>, alloc_cb:Callable<AllocCallback>, read_cb:Callable<ReadCallback>):Int;
+	@:native("uv_read_stop")
+	public static function read_stop(handle:RawPointer<Stream_t>):Int;
+	@:native("uv_write")
+	public static function write(req:RawPointer<Write_t>, handle:RawPointer<Stream_t>, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, cb:Callable<WriteCallback>):Int;
+	@:native("uv_is_readable")
+	public static function is_readable(handle:RawConstPointer<Stream_t>):Int;
+	@:native("uv_is_writable")
+	public static function is_writable(handle:RawConstPointer<Stream_t>):Int;
+	
+	// handle
+	@:native("uv_is_active")
+	public static function is_active(handle:RawConstPointer<Handle_t>):Int;
+	@:native("uv_is_closing")
+	public static function is_closing(handle:RawConstPointer<Handle_t>):Int;
+	@:native("uv_close")
+	public static function close(handle:RawPointer<Handle_t>, close_cb:Callable<CloseCallback>):Void;
+	@:native("uv_ref")
+	public static function ref(handle:RawPointer<Handle_t>):Void;
+	@:native("uv_unref")
+	public static function unref(handle:RawPointer<Handle_t>):Void;
+	@:native("uv_has_ref")
+	public static function has_ref(handle:RawConstPointer<Handle_t>):Int;
+	@:native("uv_handle_size")
+	public static function handle_size(type:HandleType):SizeT;
+	
+	// fs
+	@:native("uv_fs_open")
+	public static function fs_open(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, path:ConstCharStar, flags:Int, mode:Int, cb:Callable<FsCallback>):Int;
+	@:native("uv_fs_close")
+	public static function fs_close(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, cb:Callable<FsCallback>):Int;
+	@:native("uv_fs_read")
+	public static function fs_read(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, offset:UInt64, cb:Callable<FsCallback>):Int;
+	@:native("uv_fs_unlink")
+	public static function fs_unlink(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, path:ConstCharStar, cb:Callable<FsCallback>):Int;
+	@:native("uv_fs_write")
+	public static function fs_write(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, offset:UInt64, cb:Callable<FsCallback>):Int;
+	
+	// pipe
+	@:native("uv_pipe_init")
+	public static function pipe_init(loop:RawPointer<Loop_t>, handle:RawPointer<Pipe_t>, ipc:Int):Int;
+	@:native("uv_pipe_open")
+	public static function pipe_open(handle:RawPointer<Pipe_t>, file:File):Int;
+	
+	
+	// dns
+	@:native("uv_getaddrinfo")
+	public static function getaddrinfo(loop:RawPointer<Loop_t>, req:RawPointer<GetAddrInfo_t>, getaddrinfo_cb:Callable<GetAddrInfoCallback>, node:ConstCharStar, service:ConstCharStar, hints:RawConstPointer<AddrInfo_s>):Int;
+	@:native("uv_freeaddrinfo")
+	public static function freeaddrinfo(ai:RawPointer<AddrInfo_s>):Void;
+	@:native("uv_getnameinfo")
+	public static function getnameinfo(loop:RawPointer<Loop_t>, req:RawPointer<GetNameInfo_t>, getnameinfo_cb:Callable<GetNameInfoCallback>, addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
+	
+	// misc
+	@:native("uv_buf_init")
+	public static function buf_init(base:RawPointer<Char>, len:UInt32):Buf_t;
+	@:native("uv_ip4_addr")
+	public static function ip4_addr(ip:String, port:Int, addr:RawPointer<SockAddrIn_s>):Int;
+	@:native("uv_ip4_name")
+	public static function ip4_name(src:RawConstPointer<SockAddrIn_s>, dst:RawPointer<Char>, size:SizeT):Int;
+	@:native("uv_hrtime")
+	public static function hrtime():UInt64;
+	@:native("uv_inet_ntop")
+	public static function inet_ntop(af:Int, src:RawConstPointer<cpp.Void>, dst:RawPointer<Char>, size:SizeT):Int;
+	@:native("uv_inet_pton")
+	public static function inet_pton(af:Int, src:ConstCharStar, dst:RawPointer<cpp.Void>):Int;
+}
 
-} //Uv
+// enums
 
-@:keep
 @:include('linc_uv.h')
-#if !display
-@:build(linc.Linc.touch())
-@:build(linc.Linc.xml('uv'))
-#end
-extern class Shutdown{
-		
-	@:native('uv_shutdown')
-	public static function shutdown(req:Shutdown_t, handle:Stream, cb:Callable < Shutdown_t->Int->Void >):Int;
-} 
-//typedef void (*uv_shutdown_cb)(uv_shutdown_t* req, int status);
+@:native('uv_run_mode')
+@:scalar @:coreType @:notNull
+extern abstract RunMode from(Int) to(Int) {}
 
-@:native('::cpp::Reference<uv_shutdown_t>')
 @:include('linc_uv.h')
-extern class Shutdown_t extends Shutdown {}
-
-@:include("linc_uv.h")
+@:native('uv_handle_type')
 @:unreflective
-@:native("cpp::Struct<uv_fs_event_flags>")
-extern class EventFlags { }
+extern class HandleType {}
 
+// handles
 
-@:enum
-abstract UVFsEventFlags(EventFlags)
-from EventFlags to EventFlags {
-	
-	inline public function new(i:EventFlags) { this = i; }
-
-	@:to(EventFlags)
-	@:unreflective
-	inline public function toNative() return untyped __cpp__("((UVFsEventFlags_Impl_)({0}))", this);
-
-	@:from(EventFlags)
-	@:unreflective
-	inline static public function fromNative(value:EventFlags) return new UVFsEventFlags(untyped value);
-	
-  /*
-   * By default, if the fs event watcher is given a directory name, we will
-   * watch for all events in that directory. This flags overrides this behavior
-   * and makes fs_event report only changes to the directory entry itself. This
-   * flag does not affect individual files watched.
-   * This flag is currently not implemented yet on any backend.
-   */	
-    public static var UV_FS_EVENT_WATCH_ENTRY      = new UVFsEventFlags(untyped __cpp__("UV_FS_EVENT_WATCH_ENTRY"));
-	
- /*
-   * By default uv_fs_event will try to use a kernel interface such as inotify
-   * or kqueue to detect events. This may not work on remote filesystems such
-   * as NFS mounts. This flag makes fs_event fall back to calling stat() on a
-   * regular interval.
-   * This flag is currently not implemented yet on any backend.
-   */	
-    public static var UV_FS_EVENT_STAT             = new UVFsEventFlags(untyped __cpp__("UV_FS_EVENT_STAT"));
-
-  /*
-   * By default, event watcher, when watching directory, is not registering
-   * (is ignoring) changes in it's subdirectories.
-   * This flag will override this behaviour on platforms that support it.
-   */	
-    public static var UV_FS_EVENT_RECURSIVE        = new UVFsEventFlags(untyped __cpp__("UV_FS_EVENT_RECURSIVE"));  
-} //UVFsEventFlags
-
-
-
-@:include("linc_uv.h")
-@:unreflective
-@:native("cpp::Struct<uv_handle_type>")
-extern class HandleType { }
-
-@:enum
-abstract UVHandleType(HandleType)
-from HandleType to HandleType {
-	
-	inline public function new(i:HandleType) { this = i; }
-
-	@:to(HandleType)
-	@:unreflective
-	inline public function toNative() return untyped __cpp__("((UVHandleType_Impl_)({0}))", this);
-
-	@:from(HandleType)
-	@:unreflective
-	inline static public function fromNative(value:HandleType) return new UVHandleType(untyped value);
-	
-	
-	public static var UV_UNKNOWN_HANDLE = new UVHandleType(untyped __cpp__("UV_UNKNOWN_HANDLE"));
-	public static var UV_FILE = new UVHandleType(untyped __cpp__("UV_FILE"));
-	public static var UV_HANDLE_TYPE_MAX = new UVHandleType(untyped __cpp__("UV_HANDLE_TYPE_MAX"));
-}
-
-
-@:include("linc_uv.h")
-@:unreflective
-@:native("cpp::Struct<uv_req_type>")
-extern class ReqType { }
-
-
-@:enum
-abstract UVReqType(ReqType)
-from ReqType to ReqType {
-	
-	inline public function new(i:ReqType) { this = i; }
-
-	@:to(ReqType)
-	@:unreflective
-	inline public function toNative() return untyped __cpp__("((UVReqType_Impl_)({0}))", this);
-
-	@:from(ReqType)
-	@:unreflective
-	inline static public function fromNative(value:ReqType) return new UVReqType(untyped value);	
-	public static var UV_UNKNOWN_REQ = new UVReqType(untyped __cpp__("UV_UNKNOWN_REQ"));
-	public static var UV_REQ_TYPE_PRIVATE = new UVReqType(untyped __cpp__("UV_REQ_TYPE_PRIVATE"));
-	public static var UV_REQ_TYPE_MAX = new UVReqType(untyped __cpp__("UV_REQ_TYPE_MAX"));
-}
-
-
-@:include("linc_uv.h")
-@:unreflective
-@:native("cpp::Struct<uv_dirent_type_t>")
-extern class DirentType { }
-
-@:enum
-abstract UVDirentType(DirentType)
-from DirentType to DirentType{
-	
-	inline public function new(i:DirentType) { this = i; }
-
-	@:to(DirentType)
-	@:unreflective
-	inline public function toNative() return untyped __cpp__("((UVDirentType_Impl_)({0}))", this);
-
-	@:from(DirentType)
-	@:unreflective
-	inline static public function fromNative(value:DirentType) return new UVDirentType(untyped value);
-	
-  public static var UV_DIRENT_UNKNOWN = new UVFsType(untyped __cpp__("UV_DIRENT_UNKNOWN"));
-  public static var UV_DIRENT_FILE = new UVFsType(untyped __cpp__("UV_DIRENT_FILE"));
-  public static var UV_DIRENT_DIR = new UVFsType(untyped __cpp__("UV_DIRENT_DIR"));
-  public static var UV_DIRENT_LINK = new UVFsType(untyped __cpp__("UV_DIRENT_LINK"));
-  public static var UV_DIRENT_FIFO = new UVFsType(untyped __cpp__("UV_DIRENT_FIFO"));
-  public static var UV_DIRENT_SOCKET = new UVFsType(untyped __cpp__("UV_DIRENT_SOCKET"));
-  public static var UV_DIRENT_CHAR = new UVFsType(untyped __cpp__("UV_DIRENT_CHAR"));
-  public static var UV_DIRENT_BLOCK = new UVFsType(untyped __cpp__("UV_DIRENT_BLOCK"));
-	
-}
-
-
-@:include("linc_uv.h")
-@:unreflective
-@:native("cpp::Struct<uv_fs_event>")
-extern class FsEvent { }
-@:enum
-abstract UVFsEvent(FsEvent)
-from FsEvent to FsEvent{
-	inline public function new(i:FsEvent) { this = i; }
-
-	@:to(FsEvent)
-	@:unreflective
-	inline public function toNative() return untyped __cpp__("((UVFsEvent_Impl_)({0}))", this);
-
-	@:from(FsEvent)
-	@:unreflective
-	inline static public function fromNative(value:FsEvent) return new UVFsEvent(untyped value);	
-	
-	
-	public static var UV_RENAME = new UVFsEvent(untyped __cpp__("UV_RENAME"));
-	public static var UV_CHANGE = new UVFsEvent(untyped __cpp__("UV_CHANGE"));
-}
-
-
-@:include("linc_uv.h")
-@:unreflective
-@:native("cpp::Struct<uv_fs_type>")
-extern class FsType { }
-
-@:enum
-abstract UVFsType(FsType)
-from FsType to FsType{
-	
-	inline public function new(i:FsType) { this = i; }
-
-	@:to(FsType)
-	@:unreflective
-	inline public function toNative() return untyped __cpp__("((UVFsType_Impl_)({0}))", this);
-
-	@:from(FsType)
-	@:unreflective
-	inline static public function fromNative(value:FsType) return new UVFsType(untyped value);	
-	
-	
-	public static var UV_FS_UNKNOWN = new UVFsType(untyped __cpp__("UV_FS_UNKNOWN"));
-	public static var  UV_FS_CUSTOM = new UVFsType(untyped __cpp__("UV_FS_CUSTOM"));
-	public static var  UV_FS_OPEN = new UVFsType(untyped __cpp__("UV_FS_OPEN"));
-	public static var  UV_FS_CLOSE = new UVFsType(untyped __cpp__("UV_FS_CLOSE"));
-	public static var  UV_FS_READ = new UVFsType(untyped __cpp__("UV_FS_READ"));
-	public static var  UV_FS_WRITE = new UVFsType(untyped __cpp__("UV_FS_WRITE"));
-	public static var  UV_FS_SENDFILE = new UVFsType(untyped __cpp__("UV_FS_SENDFILE"));
-	public static var  UV_FS_STAT = new UVFsType(untyped __cpp__("UV_FS_STAT"));
-	public static var  UV_FS_LSTAT = new UVFsType(untyped __cpp__("UV_FS_LSTAT"));
-	public static var  UV_FS_FSTAT = new UVFsType(untyped __cpp__("UV_FS_FSTAT"));
-	public static var  UV_FS_FTRUNCATE = new UVFsType(untyped __cpp__("UV_FS_FTRUNCATE"));
-	public static var  UV_FS_UTIME = new UVFsType(untyped __cpp__("UV_FS_UTIME"));
-	public static var  UV_FS_FUTIME = new UVFsType(untyped __cpp__("UV_FS_FUTIME"));
-	public static var  UV_FS_ACCESS = new UVFsType(untyped __cpp__("UV_FS_ACCESS"));
-	public static var  UV_FS_CHMOD = new UVFsType(untyped __cpp__("UV_FS_CHMOD"));
-	public static var  UV_FS_FCHMOD  = new UVFsType(untyped __cpp__("UV_FS_FCHMOD"));
-	public static var  UV_FS_FSYNC  = new UVFsType(untyped __cpp__("UV_FS_FSYNC"));
-	public static var  UV_FS_FDATASYNC = new UVFsType(untyped __cpp__("UV_FS_FDATASYNC"));
-	public static var  UV_FS_UNLINK = new UVFsType(untyped __cpp__("UV_FS_UNLINK"));
-	public static var  UV_FS_RMDIR = new UVFsType(untyped __cpp__("UV_FS_RMDIR"));
-	public static var  UV_FS_MKDIR = new UVFsType(untyped __cpp__("UV_FS_MKDIR"));
-	public static var  UV_FS_MKDTEMP = new UVFsType(untyped __cpp__("UV_FS_MKDTEMP"));
-	public static var  UV_FS_RENAME = new UVFsType(untyped __cpp__("UV_FS_RENAME"));
-	public static var  UV_FS_SCANDIR = new UVFsType(untyped __cpp__("UV_FS_SCANDIR"));
-	public static var  UV_FS_LINK = new UVFsType(untyped __cpp__("UV_FS_LINK"));
-	public static var  UV_FS_SYMLINK = new UVFsType(untyped __cpp__("UV_FS_SYMLINK"));
-	public static var  UV_FS_READLINK = new UVFsType(untyped __cpp__("UV_FS_READLINK"));
-	public static var  UV_FS_CHOWN = new UVFsType(untyped __cpp__("UV_FS_CHOWN"));
-	public static var  UV_FS_FCHOWN = new UVFsType(untyped __cpp__("UV_FS_FCHOWN"));
-	public static var  UV_FS_REALPATH = new UVFsType(untyped __cpp__("UV_FS_REALPATH"));
-} 
-
-@:native('::cpp::Reference<uv_dirent_t>')
 @:include('linc_uv.h')
-private extern class Uv_Dirent_t {}
-
-
-
-@:native("::cpp::Reference<uv_gid_t>")
-extern class Uv_gid_t {}
-
-
-@:native("::cpp::Reference<uv_uid_t>")
-extern class Uv_uid_t {	}
-
-@:native('::cpp::Reference<int64_t>')
-@:include('linc_uv.h')
-extern class Int64_t{}
-
-
-@:include("linc_uv.h")
+@:native('uv_req_t')
 @:unreflective
-@:native("cpp::Struct<uv_run_mode>")
-extern class RunMode { }
+@:structAccess
+extern class Req_t {
+	var data:RawPointer<cpp.Void>;
+}
 
-abstract UVRunMode(RunMode) from RunMode to RunMode
-{
-	inline public function new(i:RunMode) { this = i; }
+@:include('linc_uv.h')
+@:native('uv_handle_t')
+@:unreflective
+@:structAccess
+extern class Handle_t {
+	var data:RawPointer<cpp.Void>;
+}
 
-	@:to(RunMode)
-	@:unreflective
-	inline public function toNative() return untyped __cpp__("((UVRunMode_Impl_)({0}))", this);
+@:include('linc_uv.h')
+@:native('uv_loop_t')
+@:unreflective
+@:structAccess
+extern class Loop_t extends Handle_t {}
 
-	@:from(RunMode)
-	@:unreflective
-	inline static public function fromNative(value:RunMode) return new UVRunMode(untyped value);
+@:include('linc_uv.h')
+@:native('uv_tcp_t')
+@:unreflective
+@:structAccess
+extern class Tcp_t extends Stream_t {}
 
-	public static var UV_RUN_DEFAULT(default, null) = new UVRunMode(untyped __cpp__("UV_RUN_DEFAULT"));
-	public static var UV_RUN_ONCE(default, null) = new UVRunMode(untyped __cpp__("UV_RUN_ONCE"));
-	public static var UV_RUN_NOWAIT(default, null) = new UVRunMode(untyped __cpp__("UV_RUN_NOWAIT"));
+@:include('linc_uv.h')
+@:native('uv_pipe_t')
+@:unreflective
+@:structAccess
+extern class Pipe_t extends Stream_t {}
+
+@:include('linc_uv.h')
+@:native('uv_timer_t')
+@:unreflective
+@:structAccess
+extern class Timer_t extends Handle_t {}
+
+@:include('linc_uv.h')
+@:native('uv_stream_t')
+@:unreflective
+@:structAccess
+extern class Stream_t extends Handle_t {}
+
+@:include('linc_uv.h')
+@:native('uv_buf_t')
+@:unreflective
+@:structAccess
+extern class Buf_t {
+	var base:CastCharStar;
+	var len:Int;
+}
+
+// req
+
+@:include('linc_uv.h')
+@:native('uv_shutdown_t')
+@:unreflective
+@:structAccess
+extern class Shutdown_t extends Req_t {
+	var handle:RawPointer<Stream_t>;
+}
+
+@:include('linc_uv.h')
+@:native('uv_connect_t')
+@:unreflective
+@:structAccess
+extern class Connect_t extends Req_t {
+	var handle:RawPointer<Stream_t>;
+}
+
+@:include('linc_uv.h')
+@:native('uv_write_t')
+@:unreflective
+@:structAccess
+extern class Write_t extends Req_t {
+	var handle:RawPointer<Stream_t>;
+}
+
+@:include('linc_uv.h')
+@:native('uv_getaddrinfo_t')
+@:unreflective
+@:structAccess
+extern class GetAddrInfo_t extends Req_t {}
+
+@:include('linc_uv.h')
+@:native('uv_getnameinfo_t')
+@:unreflective
+@:structAccess
+extern class GetNameInfo_t extends Req_t {}
+
+@:include('linc_uv.h')
+@:native('uv_fs_t')
+@:unreflective
+@:structAccess
+extern class Fs_t extends Req_t {
+	var result:Int;
 }
 
 
 
-@:native('::cpp::Reference<uv_req_t>')
+// misc
+
 @:include('linc_uv.h')
-extern class Req_t{}
-
-
-@:include("linc_uv.h")
+@:native('sockaddr')
 @:unreflective
-@:native("cpp::Struct<uv_poll_event>")
-extern class PollEvent { }
+@:structAccess
+extern class SockAddr_s {}
 
-abstract Uv_poll_event(PollEvent) from PollEvent to PollEvent
-{
-	inline public function new(i:PollEvent) { this = i; }
+@:include('linc_uv.h')
+@:native('sockaddr_in')
+@:unreflective
+@:structAccess
+extern class SockAddrIn_s {}
 
-	@:to(PollEvent)
-	@:unreflective
-	inline public function toNative() return untyped __cpp__("((Uv_poll_event_Impl_)({0}))", this);
+@:include('linc_uv.h')
+@:native('sockaddr_storage')
+@:unreflective
+@:structAccess
+extern class SockAddrStorage_s {}
 
-	@:from(PollEvent)
-	@:unreflective
-	inline static public function fromNative(value:PollEvent) return new Uv_poll_event(untyped value);
-
-	public static var UV_READABLE(default, null) = new Uv_poll_event(untyped __cpp__("UV_READABLE"));
-	public static var UV_WRITABLE(default, null) = new Uv_poll_event(untyped __cpp__("UV_WRITABLE"));
-	public static var UV_DISCONNECT(default, null) = new Uv_poll_event(untyped __cpp__("UV_DISCONNECT"));
+@:include('linc_uv.h')
+@:native('addrinfo')
+@:unreflective
+@:structAccess
+extern class AddrInfo_s {
+	var ai_flags:Int;
+	var ai_family:Int;
+	var ai_socktype:Int;
+	var ai_protocol:Int;
+	// var ai_addrlen:socklen_t;
+	var ai_addr:RawPointer<SockAddr_s>;
+	var ai_canonname:RawPointer<Char>;
+	var ai_next:RawPointer<AddrInfo>;
 }
+
+@:include('linc_uv.h')
+@:native("uv_file")
+@:scalar @:coreType @:notNull
+extern abstract File from(Int) to(Int) {}
+
+@:native("ssize_t")
+@:scalar @:coreType @:notNull
+extern abstract SSizeT from(Int) to(Int) {}
+
+@:native("long")
+@:scalar @:coreType @:notNull
+extern abstract Long from(Int) to(Int) {}
+
+typedef ShutdownCallback = RawPointer<Shutdown_t>->Int->Void;
+typedef ConnectCallback = RawPointer<Connect_t>->Int->Void;
+typedef ConnectionCallback = RawPointer<Stream_t>->Int->Void;
+typedef AllocCallback = RawPointer<Handle_t>->SizeT->RawPointer<Buf_t>->Void;
+typedef ReadCallback = RawPointer<Stream_t>->SSizeT->RawConstPointer<Buf_t>->Void;
+typedef WriteCallback = RawPointer<Write_t>->Int->Void;
+typedef CloseCallback = RawPointer<Handle_t>->Void;
+typedef TimerCallback = RawPointer<Timer_t>->Void;
+typedef GetAddrInfoCallback = RawPointer<GetAddrInfo_t>->Int->RawPointer<AddrInfo_s>->Void;
+typedef GetNameInfoCallback = RawPointer<GetNameInfo_t>->Int->ConstCharStar->ConstCharStar->Void;
+typedef FsCallback = RawPointer<Fs_t>->Void;

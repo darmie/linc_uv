@@ -1,35 +1,24 @@
 package uv;
-import cpp.Callable;
-import uv.Handle.Handle_t;
 
-/**
- * ...
- * @author Darmie Akinlaja
- */
+import uv.Uv;
+import cpp.*;
 
-@:keep
-@:include('linc_uv.h')
-#if !display
-@:build(linc.Linc.touch())
-@:build(linc.Linc.xml('uv'))
-#end
-
-extern class Stream extends Handle_t
-{
-	@:native("uv_listen")
-	public static function listen(stream:Stream_t, backlog:Int, cb:Callable < Stream_t->Int > ):Int;
+@:dce
+@:build(uv.Data.inject())
+abstract Stream(Pointer<Stream_t>) from Pointer<Stream_t> to Pointer<Stream_t> {
+	public inline function new() this = Stdlib.malloc(Stdlib.sizeof(Stream_t));
+	public inline function destroy() return Stdlib.free(this);
+	@:to public inline function asRaw():RawPointer<Stream_t> return this.raw;
+	@:to public inline function asHandle():Handle return (this.reinterpret():Pointer<Handle_t>);
+	@:from public static inline function fromRaw(r:RawPointer<Stream_t>):Stream return Pointer.fromRaw(r);
+	@:from public static inline function fromRawHandle(r:RawPointer<Handle_t>):Stream return (Pointer.fromRaw(r).reinterpret():Pointer<Stream_t>);
 	
-	@:native("uv_accept")
-	public static function accept(server:Stream_t, server:Stream_t):Int;
-	
-	@:native("uv_stop")
-	public static function stop(stream:Stream_t):Int;
-		
-	@:native("uv_read_start")
-	public static function read_start(stream:Stream_t, alloc_cb:Callable<Handle_t->Int->Buffer>, read_cb:Callable<Stream_t->Int->Buffer>):Int;
+	public inline function shutdown(req, cb) return Uv.shutdown(req, asRaw(), cb);
+	public inline function listen(backlog, cb) return Uv.listen(asRaw(), backlog, cb);
+	public inline function accept(client) return Uv.accept(asRaw(), client);
+	public inline function readStart(alloc_cb, read_cb) return Uv.read_start(asRaw(), alloc_cb, read_cb);
+	public inline function readStop() return Uv.read_stop(asRaw());
+	public inline function write(req, bufs, nbufs, cb) return Uv.write(req, asRaw(), bufs, nbufs, cb);
+	public inline function isWritable() return Uv.is_writable(asRaw()) != 0;
+	public inline function isReadable() return Uv.is_readable(asRaw()) != 0;
 }
-
-
-@:native('::cpp::Reference<uv_stream_t>')
-@:include('linc_uv.h')
-extern class Stream_t extends Stream{}

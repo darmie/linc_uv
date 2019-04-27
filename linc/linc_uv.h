@@ -5,7 +5,6 @@
 #include <hxcpp.h>
 
 
-#include <windows.h>
 namespace linc {
 
     namespace uv {
