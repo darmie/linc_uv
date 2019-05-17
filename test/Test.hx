@@ -6,6 +6,7 @@ import uv.*;
 import uv.Uv;
 import haxe.io.Bytes;
 
+
 class Test {
 	static function main() {
 		Foo.foo();
@@ -36,7 +37,10 @@ class Foo {
 		var hint = new AddrInfo();
 		var resolver = new GetAddrInfo();
 		trace(resolver.get(loop, Callable.fromStaticFunction(onResolve), 'example.com', '80', hint));
-		
+
+		// signal
+		signal(loop);
+
 		loop.run(Uv.RUN_DEFAULT);
 		trace('quit');
 	}
@@ -104,5 +108,29 @@ class Foo {
 		var connect = new Connect();
 		client.connect(connect, addr, Callable.fromStaticFunction(onConnect));
 		addr.destroy();
+	}
+
+
+	/**
+	 * Signal test
+	 * two signal handlers in one loop
+	 */
+
+	static function signal(loop){
+
+		var signal1 = new Signal();
+		
+		signal1.init(loop);
+		
+		Uv.ref(signal1.asHandle().asRaw());
+
+		signal1.start(Callable.fromStaticFunction(onStart), SIGUSR1);
+	}
+
+	static function onStart(signal:RawPointer<Signal_t>, signum:Int) {
+		trace('Signal recieved: $signum');
+		var _signal = Signal.fromRaw(signal);
+		_signal.stop();
+		Uv.unref(_signal.asHandle().asRaw());
 	}
 }

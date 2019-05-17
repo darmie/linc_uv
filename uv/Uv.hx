@@ -9,7 +9,6 @@ import cpp.*;
 @:build(linc.Linc.xml('uv'))
 #end
 extern class Uv {
-	
 	// error
 	@:native("UV_E2BIG")
 	public static var E2BIG:Int;
@@ -161,7 +160,6 @@ extern class Uv {
 	public static var ENXIO:Int;
 	@:native("UV_EMLINK")
 	public static var EMLINK:Int;
-	
 	// fs open mode
 	@:native("UV_FS_O_APPEND")
 	public static var FS_O_APPEND:Int;
@@ -205,34 +203,29 @@ extern class Uv {
 	public static var FS_O_SEQUENTIAL:Int;
 	@:native("UV_FS_O_TEMPORARY")
 	public static var FS_O_TEMPORARY:Int;
-	
 	// uv_run_mode
 	@:native("UV_RUN_DEFAULT")
 	public static var RUN_DEFAULT:RunMode;
-    @:native("UV_RUN_ONCE")
+	@:native("UV_RUN_ONCE")
 	public static var RUN_ONCE:RunMode;
-    @:native("UV_RUN_NOWAIT")
+	@:native("UV_RUN_NOWAIT")
 	public static var RUN_NOWAIT:RunMode;
-	
 	// misc
 	@:native("AF_INET")
 	public static var AF_INET:Int;
 	@:native("AF_INET6")
 	public static var AF_INET6:Int;
-	
 	@:native("UV_TCP")
 	public static var TCP:Int;
 	@:native("UV_NAMED_PIPE")
 	public static var NAMED_PIPE:Int;
 	@:native("UV_TTY")
 	public static var TTY:Int;
-	
 	// error
 	@:native("uv_strerror")
 	public static function strerror(code:Int):ConstCharStar;
 	@:native("uv_err_name")
 	public static function err_name(code:Int):ConstCharStar;
-	
 	// loop
 	@:native("uv_default_loop")
 	public static function default_loop():RawPointer<Loop_t>;
@@ -240,7 +233,6 @@ extern class Uv {
 	public static function loop_init(loop:RawPointer<Loop_t>):Int;
 	@:native("uv_run")
 	public static function run(loop:RawPointer<Loop_t>, mode:RunMode):Int;
-	
 	// timer
 	@:native("uv_timer_init")
 	public static function timer_init(loop:RawPointer<Loop_t>, timer:RawPointer<Timer_t>):Int;
@@ -248,19 +240,18 @@ extern class Uv {
 	public static function timer_start(timer:RawPointer<Timer_t>, cb:Callable<TimerCallback>, timeout:UInt64, repeat:UInt64):Int;
 	@:native("uv_timer_stop")
 	public static function timer_stop(timer:RawPointer<Timer_t>):Int;
-	
 	// tcp
 	@:native("uv_tcp_init")
 	public static function tcp_init(loop:RawPointer<Loop_t>, handle:RawPointer<Tcp_t>):Int;
 	@:native("uv_tcp_bind")
 	public static function tcp_bind(handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
 	@:native("uv_tcp_connect")
-	public static function tcp_connect(req:RawPointer<Connect_t>, handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>, cb:Callable<ConnectCallback>):Int;
+	public static function tcp_connect(req:RawPointer<Connect_t>, handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>,
+		cb:Callable<ConnectCallback>):Int;
 	@:native("uv_tcp_getsockname")
 	public static function tcp_getsockname(handle:RawConstPointer<Tcp_t>, name:RawPointer<SockAddr_s>, namelen:RawPointer<Int>):Int;
 	@:native("uv_tcp_getpeername")
 	public static function tcp_getpeername(handle:RawConstPointer<Tcp_t>, name:RawPointer<SockAddr_s>, namelen:RawPointer<Int>):Int;
-	
 	// stream
 	@:native("uv_shutdown")
 	public static function shutdown(req:RawPointer<Shutdown_t>, handle:RawPointer<Stream_t>, cb:Callable<ShutdownCallback>):Int;
@@ -273,12 +264,12 @@ extern class Uv {
 	@:native("uv_read_stop")
 	public static function read_stop(handle:RawPointer<Stream_t>):Int;
 	@:native("uv_write")
-	public static function write(req:RawPointer<Write_t>, handle:RawPointer<Stream_t>, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, cb:Callable<WriteCallback>):Int;
+	public static function write(req:RawPointer<Write_t>, handle:RawPointer<Stream_t>, bufs:RawConstPointer<Buf_t>, nbufs:UInt32,
+		cb:Callable<WriteCallback>):Int;
 	@:native("uv_is_readable")
 	public static function is_readable(handle:RawConstPointer<Stream_t>):Int;
 	@:native("uv_is_writable")
 	public static function is_writable(handle:RawConstPointer<Stream_t>):Int;
-	
 	// handle
 	@:native("uv_is_active")
 	public static function is_active(handle:RawConstPointer<Handle_t>):Int;
@@ -294,34 +285,33 @@ extern class Uv {
 	public static function has_ref(handle:RawConstPointer<Handle_t>):Int;
 	@:native("uv_handle_size")
 	public static function handle_size(type:HandleType):SizeT;
-	
 	// fs
 	@:native("uv_fs_open")
 	public static function fs_open(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, path:ConstCharStar, flags:Int, mode:Int, cb:Callable<FsCallback>):Int;
 	@:native("uv_fs_close")
 	public static function fs_close(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, cb:Callable<FsCallback>):Int;
 	@:native("uv_fs_read")
-	public static function fs_read(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, offset:UInt64, cb:Callable<FsCallback>):Int;
+	public static function fs_read(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, offset:UInt64,
+		cb:Callable<FsCallback>):Int;
 	@:native("uv_fs_unlink")
 	public static function fs_unlink(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, path:ConstCharStar, cb:Callable<FsCallback>):Int;
 	@:native("uv_fs_write")
-	public static function fs_write(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, offset:UInt64, cb:Callable<FsCallback>):Int;
-	
+	public static function fs_write(loop:RawPointer<Loop_t>, req:RawPointer<Fs_t>, file:File, bufs:RawConstPointer<Buf_t>, nbufs:UInt32, offset:UInt64,
+		cb:Callable<FsCallback>):Int;
 	// pipe
 	@:native("uv_pipe_init")
 	public static function pipe_init(loop:RawPointer<Loop_t>, handle:RawPointer<Pipe_t>, ipc:Int):Int;
 	@:native("uv_pipe_open")
 	public static function pipe_open(handle:RawPointer<Pipe_t>, file:File):Int;
-	
-	
 	// dns
 	@:native("uv_getaddrinfo")
-	public static function getaddrinfo(loop:RawPointer<Loop_t>, req:RawPointer<GetAddrInfo_t>, getaddrinfo_cb:Callable<GetAddrInfoCallback>, node:ConstCharStar, service:ConstCharStar, hints:RawConstPointer<AddrInfo_s>):Int;
+	public static function getaddrinfo(loop:RawPointer<Loop_t>, req:RawPointer<GetAddrInfo_t>, getaddrinfo_cb:Callable<GetAddrInfoCallback>,
+		node:ConstCharStar, service:ConstCharStar, hints:RawConstPointer<AddrInfo_s>):Int;
 	@:native("uv_freeaddrinfo")
 	public static function freeaddrinfo(ai:RawPointer<AddrInfo_s>):Void;
 	@:native("uv_getnameinfo")
-	public static function getnameinfo(loop:RawPointer<Loop_t>, req:RawPointer<GetNameInfo_t>, getnameinfo_cb:Callable<GetNameInfoCallback>, addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
-	
+	public static function getnameinfo(loop:RawPointer<Loop_t>, req:RawPointer<GetNameInfo_t>, getnameinfo_cb:Callable<GetNameInfoCallback>,
+		addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
 	// misc
 	@:native("uv_buf_init")
 	public static function buf_init(base:RawPointer<Char>, len:UInt32):Buf_t;
@@ -335,6 +325,17 @@ extern class Uv {
 	public static function inet_ntop(af:Int, src:RawConstPointer<cpp.Void>, dst:RawPointer<Char>, size:SizeT):Int;
 	@:native("uv_inet_pton")
 	public static function inet_pton(af:Int, src:ConstCharStar, dst:RawPointer<cpp.Void>):Int;
+	// signal
+	@:native("uv_signal_init")
+	public static function signal_init(loop:RawPointer<Loop_t>, handle:RawPointer<Signal_t>):Int;
+	@:native("uv_signal_start")
+	public static function signal_start(handle:RawPointer<Signal_t>, cb:Callable<SignalCallback>, signum:Int):Int;
+	@:native("uv_signal_start_oneshot")
+	public static function signal_start_oneshot(handle:RawPointer<Signal_t>, cb:Callable<SignalCallback>, signum:Int):Int;
+	@:native("uv_signal_stop")
+	public static function signal_stop(handle:RawPointer<Signal_t>):Int;
+	@:native("uv_loadavg")
+	public static function loadavg(avg:Array<Float>):Void;
 }
 
 // enums
@@ -398,6 +399,12 @@ extern class Timer_t extends Handle_t {}
 extern class Stream_t extends Handle_t {}
 
 @:include('linc_uv.h')
+@:native('uv_signal_t')
+@:unreflective
+@:structAccess
+extern class Signal_t extends Handle_t {}
+
+@:include('linc_uv.h')
 @:native('uv_buf_t')
 @:unreflective
 @:structAccess
@@ -452,8 +459,6 @@ extern class Fs_t extends Req_t {
 	var result:Int;
 }
 
-
-
 // misc
 
 @:include('linc_uv.h')
@@ -502,6 +507,42 @@ extern abstract SSizeT from(Int) to(Int) {}
 @:scalar @:coreType @:notNull
 extern abstract Long from(Int) to(Int) {}
 
+enum abstract SIG(Int) from (Int) to (Int) {
+	var SIGHUP = 1; /* hangup */
+	var SIGINT; /* interrupt */
+	var SIGQUIT; /* quit */
+	var SIGILL; /* illegal instruction (not reset when caught) */
+	var SIGTRAP; /* trace trap (not reset when caught) */
+	var SIGABRT; /* abort() */
+	#if !mac var SIGPOLL; /* pollable event ([XSR] generated, not supported) */
+	#elseif mac /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */ var SIGIOT = SIGABRT; /* compatibility */
+	var SIGEMT; /* EMT instruction */
+	#end /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */ var SIGFPE; /* floating point exception */
+	var SIGKILL; /* kill (cannot be caught or ignored) */
+	var SIGBUS; /* bus error */
+	var SIGSEGV; /* segmentation violation */
+	var SIGSYS; /* bad argument to system call */
+	var SIGPIPE; /* write on a pipe with no one to read it */
+	var SIGALRM; /* alarm clock */
+	var SIGTERM; /* software termination signal from kill */
+	var SIGURG; /* urgent condition on IO channel */
+	var SIGSTOP; /* sendable stop signal not from tty */
+	var SIGTSTP; /* stop signal from tty */
+	var SIGCONT; /* continue a stopped process */
+	var SIGCHLD; /* to parent on child stop or exit */
+	var SIGTTIN; /* to readers pgrp upon background tty read */
+	var SIGTTOU; /* like TTIN for output if (tp->t_local&LTOSTOP) */
+	var SIGIO; /* input/output possible signal */
+	var SIGXCPU; /* exceeded CPU time limit */
+	var SIGXFSZ; /* exceeded file size limit */
+	var SIGVTALRM; /* virtual time alarm */
+	var SIGPROF; /* profiling time alarm */
+	var SIGWINCH; /* window size changes */
+	var SIGINFO; /* information request */
+	var SIGUSR1; /* user defined signal 1 */
+	var SIGUSR2; /* user defined signal 2 */
+}
+
 typedef ShutdownCallback = RawPointer<Shutdown_t>->Int->Void;
 typedef ConnectCallback = RawPointer<Connect_t>->Int->Void;
 typedef ConnectionCallback = RawPointer<Stream_t>->Int->Void;
@@ -513,3 +554,4 @@ typedef TimerCallback = RawPointer<Timer_t>->Void;
 typedef GetAddrInfoCallback = RawPointer<GetAddrInfo_t>->Int->RawPointer<AddrInfo_s>->Void;
 typedef GetNameInfoCallback = RawPointer<GetNameInfo_t>->Int->ConstCharStar->ConstCharStar->Void;
 typedef FsCallback = RawPointer<Fs_t>->Void;
+typedef SignalCallback = RawPointer<Signal_t>->Int->Void;
