@@ -13,4 +13,6 @@ abstract Req(Pointer<Req_t>) from Pointer<Req_t> to Pointer<Req_t> {
 	
 	public inline function setData<T>(v:Data<T>) this.value.data = cast v;
 	public inline function getData<T>():Data<T> return untyped __cpp__('{0}.data', this.value);
+
+	public inline function cancel() return Uv.cancel(asRaw());
 }

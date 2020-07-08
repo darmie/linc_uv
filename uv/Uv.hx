@@ -336,6 +336,27 @@ extern class Uv {
 	public static function signal_stop(handle:RawPointer<Signal_t>):Int;
 	@:native("uv_loadavg")
 	public static function loadavg(avg:Array<Float>):Void;
+	@:native("uv_process_kill")
+	public static function process_kill(handle:RawPointer<Process_t>, signum:Int):Int;
+	@:native("uv_spawn")
+	public static function spawn(loop:RawPointer<Loop_t>, handle:RawPointer<Process_t>, options:RawPointer<ProcessOptions_t>):Int;
+	@:native("uv_process_get_pid")
+	public static function process_get_pid(handle:RawPointer<Process_t>):Int;
+	@:native("uv_queue_work")
+	public static function queue_work(loop:RawPointer<Loop_t>, req:RawPointer<Work_t>, work_cb:Callable<WorkCallback>, after_work_cb:Callable<AfterWorkCallback>):Int;
+	@:native("uv_cancel")
+	public static function cancel(req:RawPointer<Req_t>):Int;
+
+	@:native("uv_poll_init")
+	public static function poll_init(loop:RawPointer<Loop_t>, handle:RawPointer<Poll_t>, fd:Int):Int;
+	@:native("uv_poll_start")
+	public static function poll_start( handle:RawPointer<Poll_t>, events:PollEvent, cb:PollCallback):Int;
+
+	@:native("uv_poll_stop")
+	public static function poll_stop( handle:RawPointer<Poll_t>):Int;
+
+	@:native("uv_poll_init_socket")
+	public static function poll_init_socket(loop:RawPointer<Loop_t>, handle:RawPointer<Poll_t>, socket:Int):Int;
 }
 
 // enums
@@ -413,6 +434,62 @@ extern class Buf_t {
 	var len:Int;
 }
 
+// Process 
+@:include('linc_uv.h')
+@:native('uv_process_t')
+@:unreflective
+@:structAccess
+extern class Process_t extends Handle_t {
+	var pid:Int;
+	var exit_cb:ExitCallback;
+}
+
+@:include('linc_uv.h')
+@:native('uv_process_options_t')
+@:unreflective
+@:structAccess
+extern class ProcessOptions_t {
+	var exit_cb:ExitCallback;
+	var file:String;
+	var args:Array<String>;
+	var env:Array<String>;
+	var cwd:String;
+	var flags:ProcessFlags;
+	var stdio_count:Int;
+	var stdio:StdioContainer_t;
+	var uid:Int;
+	var gid:Int;
+}
+
+@:include('linc_uv.h')
+@:native('uv_stdio_container_t')
+@:unreflective
+@:structAccess
+extern class StdioContainer_t {
+	var flags:StdioFlags;
+}
+
+enum abstract StdioFlags(Int) from Int to Int {
+	var UV_IGNORE         = 0x00;
+	var UV_CREATE_PIPE    = 0x01;
+	var UV_INHERIT_FD     = 0x02;
+	var UV_INHERIT_STREAM = 0x04;
+  
+	/*
+	 * When UV_CREATE_PIPE is specified, UV_READABLE_PIPE and UV_WRITABLE_PIPE
+	 * determine the direction of flow, from the child process' perspective. Both
+	 * flags may be specified to create a duplex data stream.
+	 */
+	 var UV_READABLE_PIPE  = 0x10;
+	 var UV_WRITABLE_PIPE  = 0x20;
+  
+	/*
+	 * Open the child pipe handle in overlapped mode on Windows.
+	 * On Unix it is silently ignored.
+	 */
+	 var UV_OVERLAPPED_PIPE = 0x40;
+}
+
 // req
 
 @:include('linc_uv.h')
@@ -458,6 +535,15 @@ extern class GetNameInfo_t extends Req_t {}
 extern class Fs_t extends Req_t {
 	var result:Int;
 }
+@:include('linc_uv.h')
+@:native('uv_work_t')
+@:unreflective
+@:structAccess
+extern class Work_t extends  Req_t {
+	var loop:Pointer<Loop_t>;
+	var work_cb:WorkCallback;
+	var after_work_cb:AfterWorkCallback;
+}
 
 // misc
 
@@ -495,6 +581,14 @@ extern class AddrInfo_s {
 }
 
 @:include('linc_uv.h')
+@:native('uv_poll_t')
+@:unreflective
+@:structAccess
+extern class Poll_t {
+	var poll_cb:PollCallback;
+}
+
+@:include('linc_uv.h')
 @:native("uv_file")
 @:scalar @:coreType @:notNull
 extern abstract File from(Int) to(Int) {}
@@ -506,6 +600,55 @@ extern abstract SSizeT from(Int) to(Int) {}
 @:native("long")
 @:scalar @:coreType @:notNull
 extern abstract Long from(Int) to(Int) {}
+
+
+
+
+enum abstract ProcessFlags(Int) from Int to Int {
+  /*
+   * Set the child process' user id. The user id is supplied in the `uid` field
+   * of the options struct. This does not work on windows; setting this flag
+   * will cause uv_spawn() to fail.
+   */
+   var UV_PROCESS_SETUID = (1 << 0);
+   /*
+	* Set the child process' group id. The user id is supplied in the `gid`
+	* field of the options struct. This does not work on windows; setting this
+	* flag will cause uv_spawn() to fail.
+	*/
+	var UV_PROCESS_SETGID = (1 << 1);
+   /*
+	* Do not wrap any arguments in quotes, or perform any other escaping, when
+	* converting the argument list into a command line string. This option is
+	* only meaningful on Windows systems. On Unix it is silently ignored.
+	*/
+	var UV_PROCESS_WINDOWS_VERBATIM_ARGUMENTS = (1 << 2);
+   /*
+	* Spawn the child process in a detached state - this will make it a process
+	* group leader, and will effectively enable the child to keep running after
+	* the parent exits.  Note that the child process will still keep the
+	* parent's event loop alive unless the parent process calls uv_unref() on
+	* the child's process handle.
+	*/
+	var UV_PROCESS_DETACHED = (1 << 3);
+   /*
+	* Hide the subprocess window that would normally be created. This option is
+	* only meaningful on Windows systems. On Unix it is silently ignored.
+	*/
+	var UV_PROCESS_WINDOWS_HIDE = (1 << 4);
+   /*
+	* Hide the subprocess console window that would normally be created. This 
+	* option is only meaningful on Windows systems. On Unix it is silently
+	* ignored.
+	*/
+	var UV_PROCESS_WINDOWS_HIDE_CONSOLE = (1 << 5);
+   /*
+	* Hide the subprocess GUI window that would normally be created. This 
+	* option is only meaningful on Windows systems. On Unix it is silently
+	* ignored.
+	*/
+	var UV_PROCESS_WINDOWS_HIDE_GUI = (1 << 6);
+}
 
 enum abstract SIG(Int) from (Int) to (Int) {
 	var SIGHUP = 1; /* hangup */
@@ -543,6 +686,13 @@ enum abstract SIG(Int) from (Int) to (Int) {
 	var SIGUSR2; /* user defined signal 2 */
 }
 
+enum abstract PollEvent(Int) from Int to Int {
+	var UV_READABLE = 1;
+	var UV_WRITABLE = 2;
+	var UV_DISCONNECT = 4;
+	var UV_PRIORITIZED = 8;
+}
+
 typedef ShutdownCallback = RawPointer<Shutdown_t>->Int->Void;
 typedef ConnectCallback = RawPointer<Connect_t>->Int->Void;
 typedef ConnectionCallback = RawPointer<Stream_t>->Int->Void;
@@ -555,3 +705,7 @@ typedef GetAddrInfoCallback = RawPointer<GetAddrInfo_t>->Int->RawPointer<AddrInf
 typedef GetNameInfoCallback = RawPointer<GetNameInfo_t>->Int->ConstCharStar->ConstCharStar->Void;
 typedef FsCallback = RawPointer<Fs_t>->Void;
 typedef SignalCallback = RawPointer<Signal_t>->Int->Void;
+typedef ExitCallback = (handle:RawPointer<Process_t>, exit_status:haxe.Int64, term_signal:Int)->Void;
+typedef WorkCallback = (req:RawPointer<Work_t>)->Void;
+typedef AfterWorkCallback = (req:RawPointer<Work_t>, status:Int)->Void;
+typedef PollCallback = (handle:RawPointer<Poll_t>, status:haxe.Int64, events:Int)->Void;
