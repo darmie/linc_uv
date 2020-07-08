@@ -248,6 +248,29 @@ extern class Uv {
 	@:native("uv_tcp_connect")
 	public static function tcp_connect(req:RawPointer<Connect_t>, handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>,
 		cb:Callable<ConnectCallback>):Int;
+
+	@:native("uv_tty_init")
+	public static function tty_init(loop:RawPointer<Loop_t>, handle:RawPointer<Tty_t>, fd:Int, readable:Int):Int;
+	@:native("uv_tty_set_mode")
+	public static function tty_set_mode(handle:RawPointer<Tty_t>, mode:TTyMode):Int;
+
+	@:native("uv_tty_reset_mode")
+	public static function tty_reset_mode():Int;
+
+	public static inline function tty_get_winsize(handle:RawPointer<Tty_t>):{
+		width:Int,
+		height:Int
+	} {
+		var w = 0;
+		var h = 0;
+		untyped __cpp__("uv_tty_get_winsize({0}, &{1}, &{2})", handle, w, h);
+
+		return {
+			width: w,
+			height: h
+		};
+	}
+
 	@:native("uv_tcp_getsockname")
 	public static function tcp_getsockname(handle:RawConstPointer<Tcp_t>, name:RawPointer<SockAddr_s>, namelen:RawPointer<Int>):Int;
 	@:native("uv_tcp_getpeername")
@@ -350,21 +373,56 @@ extern class Uv {
 	@:native("uv_poll_init")
 	public static function poll_init(loop:RawPointer<Loop_t>, handle:RawPointer<Poll_t>, fd:Int):Int;
 	@:native("uv_poll_start")
-	public static function poll_start( handle:RawPointer<Poll_t>, events:PollEvent, cb:PollCallback):Int;
+	public static function poll_start( handle:RawPointer<Poll_t>, events:PollEvent, cb:Callable<PollCallback>):Int;
 
 	@:native("uv_poll_stop")
 	public static function poll_stop( handle:RawPointer<Poll_t>):Int;
 
 	@:native("uv_poll_init_socket")
 	public static function poll_init_socket(loop:RawPointer<Loop_t>, handle:RawPointer<Poll_t>, socket:Int):Int;
+	@:native("uv_prepare_init")
+	public static function prepare_init(loop:RawPointer<Loop_t>, handle:RawPointer<Prepare_t>):Int;
+
+	@:native("uv_prepare_start")
+	public static function prepare_start(prepare:RawPointer<Prepare_t>, cb:Callable<PrepareCallback>):Int;
+
+	@:native("uv_prepare_stop")
+	public static function prepare_stop( handle:RawPointer<Prepare_t>):Int;
+
+
+	@:native("uv_check_init")
+	public static function check_init(loop:RawPointer<Loop_t>, handle:RawPointer<Check_t>):Int;
+
+	@:native("uv_check_start")
+	public static function check_start(prepare:RawPointer<Check_t>, cb:Callable<CheckCallback>):Int;
+
+	@:native("uv_check_stop")
+	public static function check_stop( handle:RawPointer<Check_t>):Int;
+
+	@:native("uv_idle_init")
+	public static function idle_init(loop:RawPointer<Loop_t>, handle:RawPointer<Idle_t>):Int;
+
+	@:native("uv_idle_start")
+	public static function idle_start(prepare:RawPointer<Idle_t>, cb:Callable<IdleCallback>):Int;
+
+	@:native("uv_idle_stop")
+	public static function idle_stop( handle:RawPointer<Idle_t>):Int;
+
+	@:native("uv_async_init")
+	public static function async_init(loop:RawPointer<Loop_t>, prepare:RawPointer<Async_t>, cb:Callable<AsyncCallback>):Int;
+
+	@:native("uv_async_send")
+	public static function async_stop( handle:RawPointer<Async_t>):Int;
 }
 
 // enums
 
-@:include('linc_uv.h')
-@:native('uv_run_mode')
-@:scalar @:coreType @:notNull
-extern abstract RunMode from(Int) to(Int) {}
+
+enum abstract RunMode(Int) from(Int) to(Int) {
+	var UV_RUN_DEFAULT = 0;
+	var UV_RUN_ONCE;
+	var UV_RUN_NOWAIT;
+}
 
 @:include('linc_uv.h')
 @:native('uv_handle_type')
@@ -400,6 +458,12 @@ extern class Loop_t extends Handle_t {}
 @:unreflective
 @:structAccess
 extern class Tcp_t extends Stream_t {}
+
+@:include('linc_uv.h')
+@:native('uv_tty_t')
+@:unreflective
+@:structAccess
+extern class Tty_t extends Stream_t {}
 
 @:include('linc_uv.h')
 @:native('uv_pipe_t')
@@ -589,19 +653,55 @@ extern class Poll_t {
 }
 
 @:include('linc_uv.h')
+@:native('uv_prepare_t')
+@:unreflective
+@:structAccess
+extern class Prepare_t {}
+
+@:include('linc_uv.h')
+@:native('uv_check_t')
+@:unreflective
+@:structAccess
+extern class Check_t {}
+
+@:include('linc_uv.h')
+@:native('uv_idle_t')
+@:unreflective
+@:structAccess
+extern class Idle_t {}
+
+@:include('linc_uv.h')
+@:native('uv_async_t')
+@:unreflective
+@:structAccess
+extern class Async_t {}
+
+@:include('linc_uv.h')
 @:native("uv_file")
 @:scalar @:coreType @:notNull
 extern abstract File from(Int) to(Int) {}
 
+@:include('linc_uv.h')
 @:native("ssize_t")
 @:scalar @:coreType @:notNull
 extern abstract SSizeT from(Int) to(Int) {}
 
+@:include('linc_uv.h')
 @:native("long")
 @:scalar @:coreType @:notNull
 extern abstract Long from(Int) to(Int) {}
 
 
+@:include('linc_uv.h')
+@:native("uv_tty_mode_t")
+enum abstract TTyMode(Int) from(Int) to(Int) {
+  /* Initial/normal terminal mode */
+  var UV_TTY_MODE_NORMAL = untyped __cpp__("UV_TTY_MODE_NORMAL");
+  /* Raw input mode (On Windows, ENABLE_WINDOW_INPUT is also enabled) */
+  var UV_TTY_MODE_RAW = untyped __cpp__("UV_TTY_MODE_RAW");
+  /* Binary-safe I/O mode for IPC (Unix-only) */
+  var UV_TTY_MODE_IO = untyped __cpp__("UV_TTY_MODE_IO");	
+}
 
 
 enum abstract ProcessFlags(Int) from Int to Int {
@@ -709,3 +809,7 @@ typedef ExitCallback = (handle:RawPointer<Process_t>, exit_status:haxe.Int64, te
 typedef WorkCallback = (req:RawPointer<Work_t>)->Void;
 typedef AfterWorkCallback = (req:RawPointer<Work_t>, status:Int)->Void;
 typedef PollCallback = (handle:RawPointer<Poll_t>, status:haxe.Int64, events:Int)->Void;
+typedef PrepareCallback = (handle:RawPointer<Prepare_t>)->Void;
+typedef CheckCallback = (handle:RawPointer<Check_t>)->Void;
+typedef IdleCallback = (handle:RawPointer<Idle_t>)->Void;
+typedef AsyncCallback = (handle:RawPointer<Async_t>)->Void;

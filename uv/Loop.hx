@@ -20,12 +20,6 @@ abstract Loop(Pointer<Loop_t>) from Pointer<Loop_t> to Pointer<Loop_t> {
 	public inline function spawn(handle:Process, options:ProcessOptions) return Uv.spawn(asRaw(), handle.asRaw(), options.asRaw());
 
 	public inline function queue_work(req, work_cb, after_work_cb) return Uv.queue_work(asRaw(), req, work_cb, after_work_cb);
-	
-	// fs stuff (they use the loop handle as context)
-	public inline function open(req, path, flags, mode, cb) return Uv.fs_open(asRaw(), req, path, flags, mode, cb);
-	public inline function close(req, file, cb) return Uv.fs_close(asRaw(), req, file, cb);
-	public inline function read(req, file, bufs, nbufs, offset, cb) return Uv.fs_read(asRaw(), req, file, bufs, nbufs, offset, cb);
-	public inline function unlink(req, path, cb) return Uv.fs_unlink(asRaw(), req, path, cb);
-	public inline function write(req, file, bufs, nbufs, offset, cb) return Uv.fs_write(asRaw(), req, file, bufs, nbufs, offset, cb);
-	
+
+	public inline function prepare_init(prepare):Int return Uv.prepare_init(asRaw(), prepare);
 }
