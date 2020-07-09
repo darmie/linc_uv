@@ -13,4 +13,5 @@ abstract Work(Pointer<Work_t>) from Pointer<Work_t> to Pointer<Work_t> {
     @:from public static inline function fromRaw(r:RawPointer<Work_t>):Work_t return Pointer.fromRaw(r);
     
     public inline function cancel():Int return Uv.cancel(asReq().asRaw());
+    public inline function queue(loop, work_cb, after_work_cb) return Uv.queue_work(loop, asRaw(), work_cb, after_work_cb);
 }

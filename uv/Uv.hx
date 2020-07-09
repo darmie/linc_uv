@@ -231,8 +231,18 @@ extern class Uv {
 	public static function default_loop():RawPointer<Loop_t>;
 	@:native("uv_loop_init")
 	public static function loop_init(loop:RawPointer<Loop_t>):Int;
+	@:native("uv_loop_close")
+	public static function loop_close(loop:RawPointer<Loop_t>):Int;
+	@:native("uv_loop_alive")
+	public static function loop_alive(loop:RawConstPointer<Loop_t>):Int;
+	@:native("uv_loop_fork")
+	public static function loop_fork(loop:RawPointer<Loop_t>):Int;
+	@:native("uv_loop_size")
+	public static function loop_size():SizeT;
 	@:native("uv_run")
 	public static function run(loop:RawPointer<Loop_t>, mode:RunMode):Int;
+	@:native("uv_stop")
+	public static function stop(loop:RawPointer<Loop_t>):Void;
 	// timer
 	@:native("uv_timer_init")
 	public static function timer_init(loop:RawPointer<Loop_t>, timer:RawPointer<Timer_t>):Int;
@@ -243,8 +253,25 @@ extern class Uv {
 	// tcp
 	@:native("uv_tcp_init")
 	public static function tcp_init(loop:RawPointer<Loop_t>, handle:RawPointer<Tcp_t>):Int;
+
+	@:native("uv_tcp_init_ex")
+	public static function tcp_init_ex(loop:RawPointer<Loop_t>, handle:RawPointer<Tcp_t>, flags:Int):Int;
+
+	@:native("uv_tcp_open")
+	public static function tcp_open(handle:RawPointer<Tcp_t>, sock:Int):Int;
+
 	@:native("uv_tcp_bind")
 	public static function tcp_bind(handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
+
+	@:native("uv_tcp_nodelay")
+	public static function tcp_nodelay(handle:RawPointer<Tcp_t>, enable:Int):Int;
+
+	@:native("uv_tcp_simultaneous_accepts")
+	public static function tcp_simultaneous_accepts(handle:RawPointer<Tcp_t>, enable:Int):Int;
+
+	@:native("uv_tcp_keepalive")
+	public static function tcp_keepalive(handle:RawPointer<Tcp_t>, enable:Int, delay:Int):Int;
+
 	@:native("uv_tcp_connect")
 	public static function tcp_connect(req:RawPointer<Connect_t>, handle:RawPointer<Tcp_t>, addr:RawConstPointer<SockAddr_s>,
 		cb:Callable<ConnectCallback>):Int;
@@ -257,10 +284,8 @@ extern class Uv {
 	@:native("uv_tty_reset_mode")
 	public static function tty_reset_mode():Int;
 
-	public static inline function tty_get_winsize(handle:RawPointer<Tty_t>):{
-		width:Int,
-		height:Int
-	} {
+	public static inline function tty_get_winsize(handle:RawPointer<Tty_t>):{width:Int,height:Int} 
+	{
 		var w = 0;
 		var h = 0;
 		untyped __cpp__("uv_tty_get_winsize({0}, &{1}, &{2})", handle, w, h);
@@ -413,16 +438,71 @@ extern class Uv {
 
 	@:native("uv_async_send")
 	public static function async_stop( handle:RawPointer<Async_t>):Int;
+
+	@:native("uv_upd_init")
+	public static function udp_init(loop:RawPointer<Loop_t>, handle:RawPointer<Udp_t>):Int;
+
+	@:native("uv_udp_init_ex")
+	public static function udp_init_ex(loop:RawPointer<Loop_t>, handle:RawPointer<Udp_t>, flags:Int):Int;
+
+	@:native("uv_udp_open")
+	public static function udp_open(handle:RawPointer<Udp_t>, sock:Int):Int;
+
+	@:native("uv_udp_bind")
+	public static function udp_bind(handle:RawPointer<Udp_t>, addr:RawConstPointer<SockAddr_s>, flags:Int):Int;
+
+
+	public static inline function udp_getsockname(handle:RawConstPointer<Udp_t>, name:RawConstPointer<SockAddr_s>):Int {
+		var namelen:Null<Int> = null;
+		untyped __cpp__("uv_udp_getsockname({0}, {1}, &{2})", handle, name, namelen);
+		return namelen;
+	}
+	@:native("uv_udp_set_membership")
+	public static function udp_set_membership(handle:RawPointer<Udp_t>, multicast_addr:String, interface_addr:String, membership:UvMembership):Int;
+
+	@:native("uv_udp_set_multicast_loop")
+	public static function udp_set_multicast_loop(handle:RawPointer<Udp_t>, on:Int):Int;
+
+	@:native("uv_udp_set_multicast_ttl")
+	public static function udp_set_multicast_ttl(handle:RawPointer<Udp_t>, ttl:Int):Int;
+
+	@:native("uv_udp_set_multicast_interface")
+	public static function udp_set_multicast_interface(handle:RawPointer<Udp_t>, interface_addr:String):Int;
+
+	@:native("uv_udp_set_broadcast")
+	public static function udp_set_broadcast(handle:RawPointer<Udp_t>, on:Int):Int;
+
+	@:native("uv_udp_set_ttl")
+	public static function udp_set_ttl(handle:RawPointer<Udp_t>, ttl:Int):Int;
+
+	@:native("uv_udp_send")
+	public static function udp_send(req:RawPointer<UdpSend_t>,handle:RawPointer<Udp_t>, bufs:Array<Buf_t>, nbufs:Int, addr:RawConstPointer<SockAddr_s>, send_cb:Callable<UdpSendCallback>):Int;
+
+	@:native("uv_udp_try_send")
+	public static function udp_try_send(handle:RawPointer<Udp_t>, bufs:Array<Buf_t>, nbufs:Int, addr:RawConstPointer<SockAddr_s>, send_cb:Callable<UdpSendCallback>):Int;
+
+	@:native("uv_udp_recv_start")
+	public static function udp_recv_start(handle:RawPointer<Udp_t>, alloc_cb:Callable<AllocCallback>,recv_cb:Callable<UdpSendCallback>):Int;
+
+	@:native("uv_udp_recv_stop")
+	public static function udp_recv_stop(handle:RawPointer<Udp_t>):Int;
+
+	@:native("uv_udp_get_send_queue_size")
+	public static function udp_get_send_queue_size(handle:RawPointer<Udp_t>):SizeT;
+	@:native("uv_udp_get_send_queue_count")
+	public static function udp_get_send_queue_count(handle:RawPointer<Udp_t>):SizeT;
 }
 
 // enums
+@:include('linc_uv.h')
+@:native("uv_membership")
+@:scalar @:coreType @:notNull
+extern abstract UvMembership from(Int) to(Int) {}
 
-
-enum abstract RunMode(Int) from(Int) to(Int) {
-	var UV_RUN_DEFAULT = 0;
-	var UV_RUN_ONCE;
-	var UV_RUN_NOWAIT;
-}
+@:include('linc_uv.h')
+@:native("uv_run_mode")
+@:scalar @:coreType @:notNull
+extern abstract RunMode from(Int) to(Int) {}
 
 @:include('linc_uv.h')
 @:native('uv_handle_type')
@@ -496,6 +576,25 @@ extern class Signal_t extends Handle_t {}
 extern class Buf_t {
 	var base:CastCharStar;
 	var len:Int;
+}
+
+
+@:include('linc_uv.h')
+@:native('uv_udp_t')
+@:unreflective
+@:structAccess
+extern class Udp_t extends Handle_t {
+	var send_queue_size:SizeT;
+	var send_queue_count:SizeT;
+}
+
+@:include('linc_uv.h')
+@:native('uv_udp_send_t')
+@:unreflective
+@:structAccess
+extern class UdpSend_t extends Req_t {
+	var handle:RawPointer<Udp_t>;
+	var cb:UdpSendCallback;
 }
 
 // Process 
@@ -694,14 +793,8 @@ extern abstract Long from(Int) to(Int) {}
 
 @:include('linc_uv.h')
 @:native("uv_tty_mode_t")
-enum abstract TTyMode(Int) from(Int) to(Int) {
-  /* Initial/normal terminal mode */
-  var UV_TTY_MODE_NORMAL = untyped __cpp__("UV_TTY_MODE_NORMAL");
-  /* Raw input mode (On Windows, ENABLE_WINDOW_INPUT is also enabled) */
-  var UV_TTY_MODE_RAW = untyped __cpp__("UV_TTY_MODE_RAW");
-  /* Binary-safe I/O mode for IPC (Unix-only) */
-  var UV_TTY_MODE_IO = untyped __cpp__("UV_TTY_MODE_IO");	
-}
+@:scalar @:coreType @:notNull
+extern abstract TTyMode from(Int) to(Int) {}
 
 
 enum abstract ProcessFlags(Int) from Int to Int {
@@ -793,6 +886,26 @@ enum abstract PollEvent(Int) from Int to Int {
 	var UV_PRIORITIZED = 8;
 }
 
+
+enum abstract UDPFlags(Int) from Int to Int {
+	  /* Disables dual stack mode. */
+	  var UV_UDP_IPV6ONLY = 1;
+	  /*
+	   * Indicates message was truncated because read buffer was too small. The
+	   * remainder was discarded by the OS. Used in uv_udp_recv_cb.
+	   */
+	  var UV_UDP_PARTIAL = 2;
+	  /*
+	   * Indicates if SO_REUSEADDR will be set when binding the handle.
+	   * This sets the SO_REUSEPORT socket flag on the BSDs and OS X. On other
+	   * Unix platforms, it sets the SO_REUSEADDR flag.  What that means is that
+	   * multiple threads or processes can bind to the same address without error
+	   * (provided they all set the flag) but only the last one to bind will receive
+	   * any traffic, in effect "stealing" the port from the previous listener.
+	   */
+	  var UV_UDP_REUSEADDR = 4;
+}
+
 typedef ShutdownCallback = RawPointer<Shutdown_t>->Int->Void;
 typedef ConnectCallback = RawPointer<Connect_t>->Int->Void;
 typedef ConnectionCallback = RawPointer<Stream_t>->Int->Void;
@@ -813,3 +926,5 @@ typedef PrepareCallback = (handle:RawPointer<Prepare_t>)->Void;
 typedef CheckCallback = (handle:RawPointer<Check_t>)->Void;
 typedef IdleCallback = (handle:RawPointer<Idle_t>)->Void;
 typedef AsyncCallback = (handle:RawPointer<Async_t>)->Void;
+typedef UdpSendCallback = (req:RawPointer<UdpSend_t>, status:Int)->Void;
+typedef UdpRecvCallback = (handle:RawPointer<Udp_t>, nread:SizeT, buf:RawConstPointer<Buf_t>, addr:RawConstPointer<SockAddr_s>, flags:Int)->Void;
