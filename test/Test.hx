@@ -1,11 +1,12 @@
 
 package;
 
+import haxe.io.UInt8Array;
 import cpp.*;
 import uv.*;
 import uv.Uv;
 import haxe.io.Bytes;
-
+import haxe.node.Buffer;
 
 class Test {
 	static function main() {
